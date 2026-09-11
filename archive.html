@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이전 주보 · 인평교회</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #FAF6EE;
+    --ivory-2: #F3ECDC;
+    --navy: #1B2A4E;
+    --gold: #B08A3E;
+    --ink: #2A2620;
+    --ink-mute: #6B655A;
+    --line: #E5DCC6;
+    --card: #FFFFFF;
+    --shadow: 0 4px 20px rgba(27,42,78,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', system-ui, sans-serif;
+    background: var(--ivory);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+  .topbar {
+    background: var(--navy);
+    color: var(--ivory);
+    padding: 18px 20px;
+    margin-bottom: 24px;
+  }
+  .topbar-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .topbar h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.3rem;
+  }
+  .topbar a {
+    color: var(--ivory);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .help {
+    background: #FFF8E7;
+    border: 1px solid #E8D89A;
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: #6B5B1E;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .help strong { color: var(--navy); }
+  .archive-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .archive-item {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+  }
+  .archive-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(27,42,78,0.1);
+  }
+  .archive-type {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--ivory-2);
+    color: var(--navy);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    width: fit-content;
+    margin-bottom: 4px;
+  }
+  .archive-date {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .archive-title {
+    color: var(--ink);
+    font-size: 0.95rem;
+    margin-top: 4px;
+  }
+  .archive-preacher {
+    color: var(--ink-mute);
+    font-size: 0.88rem;
+    margin-top: 2px;
+  }
+  .archive-remove {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px; height: 28px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--ink-mute);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+  }
+  .edit-mode .archive-remove { display: flex; }
+  .edit-mode .archive-item { pointer-events: none; }
+  .edit-mode .archive-remove { pointer-events: auto; }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    background: var(--card);
+    color: var(--ink);
+    text-decoration: none;
+    min-height: 42px;
+  }
+  .btn:hover { background: var(--ivory-2); }
+  .btn.primary {
+    background: var(--navy);
+    color: var(--ivory);
+    border-color: var(--navy);
+  }
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-mute);
+    background: var(--card);
+    border: 2px dashed var(--line);
+    border-radius: 12px;
+  }
+  .empty h3 {
+    font-family: 'Noto Serif KR', serif;
+    color: var(--navy);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <h1>📚 이전 주보 보관함</h1>
+    <a href="index.html">← 주보 보기</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="help">
+    <strong>📌 이전 주보를 남기는 방법</strong><br>
+    <strong>[💾 현재 주보 보관함에 추가]</strong>를 누르면 지금 보고 있는 주보가 브라우저에 저장됩니다.
+    깃허브에 올리신 뒤에는 <code>archive/</code> 폴더에 각 주 JSON 파일을 넣으시면 영구 보관됩니다.
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="addCurrentBtn">💾 현재 주보 보관함에 추가</button>
+    <button class="btn" id="toggleEditBtn">✏️ 편집 모드</button>
+    <label class="btn">
+      📤 JSON 불러오기
+      <input type="file" id="uploadInput" accept=".json,application/json" style="display:none" multiple>
+    </label>
+  </div>
+
+  <div id="archiveList" class="archive-list"></div>
+
+  <div class="empty" id="emptyState" style="display:none">
+    <h3>보관된 주보가 없습니다</h3>
+    <p>주보를 보시고 위의 <strong>[💾 현재 주보 보관함에 추가]</strong>를 눌러 저장해 보세요.</p>
+  </div>
+
+</div>
+
+<script>
+  const listEl = document.getElementById('archiveList');
+  const emptyEl = document.getElementById('emptyState');
+  let editMode = false;
+
+  function loadArchive() {
+    try {
+      return JSON.parse(localStorage.getItem('inpyeong-archive') || '[]');
+    } catch(e) { return []; }
+  }
+
+  function saveArchive(list) {
+    localStorage.setItem('inpyeong-archive', JSON.stringify(list));
+  }
+
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function render() {
+    const list = loadArchive().sort((a, b) => (b.savedAt || '').localeCompare(a.savedAt || ''));
+    listEl.innerHTML = '';
+    if (!list.length) {
+      emptyEl.style.display = '';
+      return;
+    }
+    emptyEl.style.display = 'none';
+    list.forEach((item, i) => {
+      const card = document.createElement('a');
+      card.className = 'archive-item';
+      card.href = `index.html?bulletin=${encodeURIComponent(item.id)}`;
+      card.innerHTML = `
+        <span class="archive-type">${esc(item.data?.service?.type || '예배')}</span>
+        <div class="archive-date">${esc(item.data?.service?.date || '(날짜 없음)')}</div>
+        <div class="archive-title">${esc(item.data?.service?.sermon?.title || '설교 제목 없음')}</div>
+        <div class="archive-preacher">${esc(item.data?.service?.sermon?.preacher || '')}</div>
+        <button class="archive-remove" data-id="${esc(item.id)}" title="삭제">✕</button>
+      `;
+      card.querySelector('.archive-remove').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!confirm('이 주보를 보관함에서 삭제할까요?')) return;
+        const filtered = loadArchive().filter(x => x.id !== item.id);
+        saveArchive(filtered);
+        render();
+      });
+      listEl.appendChild(card);
+    });
+  }
+
+  document.getElementById('addCurrentBtn').addEventListener('click', async () => {
+    let data;
+    // Try draft first
+    const draft = localStorage.getItem('inpyeong-bulletin-draft');
+    if (draft) {
+      try { data = JSON.parse(draft); } catch(e) {}
+    }
+    if (!data) {
+      try {
+        const res = await fetch('data/bulletin.json?t=' + Date.now());
+        data = await res.json();
+      } catch(e) {
+        alert('현재 주보를 불러올 수 없습니다.');
+        return;
+      }
+    }
+    const id = `${data.service?.date || 'bulletin'}-${data.service?.type || ''}-${Date.now()}`.replace(/\s+/g, '_');
+    const list = loadArchive();
+    // De-dupe by date + type
+    const key = `${data.service?.date}|${data.service?.type}`;
+    const filtered = list.filter(x => `${x.data?.service?.date}|${x.data?.service?.type}` !== key);
+    filtered.unshift({ id, savedAt: new Date().toISOString(), data });
+    saveArchive(filtered);
+    render();
+    alert('✓ 보관함에 저장되었습니다.');
+  });
+
+  document.getElementById('toggleEditBtn').addEventListener('click', () => {
+    editMode = !editMode;
+    document.body.classList.toggle('edit-mode', editMode);
+    document.getElementById('toggleEditBtn').textContent = editMode ? '✓ 편집 종료' : '✏️ 편집 모드';
+  });
+
+  document.getElementById('uploadInput').addEventListener('change', (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    let loaded = 0;
+    const list = loadArchive();
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          const id = `${data.service?.date || 'bulletin'}-${data.service?.type || ''}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`.replace(/\s+/g, '_');
+          list.unshift({ id, savedAt: new Date().toISOString(), data });
+          loaded++;
+          if (loaded === files.length) {
+            saveArchive(list);
+            render();
+            alert(`✓ ${loaded}개 주보를 불러왔습니다.`);
+          }
+        } catch(err) { alert('올바른 JSON 파일이 아닙니다: ' + file.name); }
+      };
+      reader.readAsText(file);
+    });
+  });
+
+  render();
+</script>
+</body>
+</html>

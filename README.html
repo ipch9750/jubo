@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사용 설명서 · 인평교회 주보</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #FAF6EE;
+    --ivory-2: #F3ECDC;
+    --navy: #1B2A4E;
+    --navy-2: #2D4373;
+    --gold: #B08A3E;
+    --ink: #2A2620;
+    --ink-mute: #6B655A;
+    --line: #E5DCC6;
+    --card: #FFFFFF;
+    --code: #F5EDD8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--ivory);
+    color: var(--ink);
+    line-height: 1.75;
+    padding: 0 0 80px;
+    font-size: 16px;
+  }
+  .topbar {
+    background: var(--navy);
+    color: var(--ivory);
+    padding: 18px 20px;
+    margin-bottom: 24px;
+  }
+  .topbar-inner {
+    max-width: 820px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .topbar h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.3rem;
+  }
+  .topbar a {
+    color: var(--ivory);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .intro {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 20px rgba(27,42,78,0.06);
+  }
+  .intro h2 {
+    font-family: 'Noto Serif KR', serif;
+    color: var(--navy);
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+  .intro p {
+    color: var(--ink);
+    font-size: 1.02rem;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--ivory-2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+  }
+  .toc-title {
+    font-family: 'Noto Serif KR', serif;
+    color: var(--navy);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .toc ol {
+    padding-left: 22px;
+  }
+  .toc li {
+    padding: 4px 0;
+  }
+  .toc a {
+    color: var(--navy);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--gold);
+  }
+  .toc a:hover { color: var(--gold); }
+
+  /* Sections */
+  section {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(27,42,78,0.06);
+    border: 1px solid var(--line);
+    scroll-margin-top: 20px;
+  }
+  section h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.5rem;
+    color: var(--navy);
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  section h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.15rem;
+    color: var(--navy);
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+  section p {
+    margin-bottom: 12px;
+  }
+  section ol, section ul {
+    padding-left: 26px;
+    margin-bottom: 16px;
+  }
+  section li {
+    margin-bottom: 8px;
+    line-height: 1.75;
+  }
+  strong { color: var(--navy); font-weight: 700; }
+  code {
+    background: var(--code);
+    color: var(--navy);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Menlo', 'Consolas', monospace;
+    font-size: 0.92em;
+  }
+  pre {
+    background: var(--code);
+    padding: 14px 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 12px 0;
+    font-family: 'Menlo', 'Consolas', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .callout {
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin: 16px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .callout .cico { font-size: 1.3rem; flex-shrink: 0; }
+  .callout.tip {
+    background: #FFF8E7;
+    border: 1px solid #E8D89A;
+    color: #6B5B1E;
+  }
+  .callout.tip strong { color: var(--navy); }
+  .callout.note {
+    background: #E8F1FA;
+    border: 1px solid #B8D4EB;
+    color: #1B4A73;
+  }
+  .callout.warn {
+    background: #FBE9E9;
+    border: 1px solid #E8B8B8;
+    color: #8B2E2E;
+  }
+
+  .step-list {
+    counter-reset: step;
+    list-style: none;
+    padding-left: 0;
+  }
+  .step-list > li {
+    counter-increment: step;
+    position: relative;
+    padding: 16px 16px 16px 60px;
+    background: var(--ivory);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    margin-bottom: 12px;
+  }
+  .step-list > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    width: 30px;
+    height: 30px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .step-title {
+    display: block;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+    font-size: 1.05rem;
+  }
+  .step-list li ul, .step-list li ol { margin-top: 8px; }
+
+  a.link { color: var(--navy); border-bottom: 1px dotted var(--gold); text-decoration: none; }
+  a.link:hover { color: var(--gold); }
+
+  kbd {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: monospace;
+    font-size: 0.9em;
+    box-shadow: 0 1px 0 var(--line);
+  }
+
+  .file-tree {
+    background: var(--code);
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-family: 'Menlo', monospace;
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: var(--navy);
+    margin: 12px 0;
+  }
+  .file-tree .comment { color: var(--ink-mute); }
+
+  .foot {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--ink-mute);
+    font-family: 'Noto Serif KR', serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <h1>📘 사용 설명서</h1>
+    <a href="home.html">← 홈으로</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="intro">
+    <h2>안녕하세요, 채수호 목사님 🙏</h2>
+    <p>
+      코딩을 몰라도 <strong>따라 하기만 하면 되는</strong> 순서대로 정리했습니다.
+      크게 <strong>두 가지</strong>만 익히시면 됩니다:
+    </p>
+    <ul>
+      <li>① <strong>깃허브(GitHub)에 한 번 올려서</strong> 성도님들이 볼 수 있는 인터넷 주소를 만드는 방법</li>
+      <li>② <strong>매주 주보 내용을 바꾸는</strong> 방법</li>
+    </ul>
+    <p>
+      처음 <strong>①</strong>은 30분쯤 걸리지만, 한 번 해두면 그다음 주부터는 <strong>②만 3-5분</strong>이면 됩니다.
+    </p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">📑 목차</div>
+    <ol>
+      <li><a href="#files">1. 이 프로젝트에 포함된 파일들</a></li>
+      <li><a href="#github">2. 깃허브(GitHub) 계정 만들기 · 저장소 만들기</a></li>
+      <li><a href="#upload">3. 주보 파일 업로드하기 (드래그 한 번)</a></li>
+      <li><a href="#pages">4. GitHub Pages로 인터넷에 공개하기</a></li>
+      <li><a href="#qr">5. QR 코드 만들어 성도님께 안내하기</a></li>
+      <li><a href="#weekly">6. 매주 주보 내용 바꾸는 방법</a></li>
+      <li><a href="#tips">7. 실전 팁 & 자주 묻는 질문</a></li>
+    </ol>
+  </div>
+
+  <!-- 1. Files -->
+  <section id="files">
+    <h2>📂 1. 이 프로젝트에 포함된 파일들</h2>
+    <p>목사님께 드리는 파일은 다음과 같이 구성되어 있습니다.</p>
+    <div class="file-tree">
+📁 인평교회주보/<br>
+├── <strong>home.html</strong> &nbsp;&nbsp;<span class="comment"># 시작 화면 (전체 페이지 안내)</span><br>
+├── <strong>index.html</strong> &nbsp;&nbsp;<span class="comment"># 성도님들이 실제로 보는 주보</span><br>
+├── <strong>edit.html</strong> &nbsp;&nbsp;<span class="comment"># 주보 내용 편집 화면</span><br>
+├── <strong>qr.html</strong> &nbsp;&nbsp;<span class="comment"># QR 코드 생성 페이지</span><br>
+├── <strong>archive.html</strong> &nbsp;<span class="comment"># 이전 주보 보관함</span><br>
+├── <strong>print.html</strong> &nbsp;&nbsp;<span class="comment"># A4 인쇄용 주보</span><br>
+├── <strong>README.html</strong> &nbsp;<span class="comment"># 이 사용 설명서</span><br>
+└── 📁 data/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>bulletin.json</strong> &nbsp;<span class="comment"># 주보 내용이 담긴 파일 (매주 갱신)</span>
+    </div>
+    <div class="callout tip">
+      <span class="cico">💡</span>
+      <div>
+        <strong>가장 중요한 파일은 <code>data/bulletin.json</code> 하나입니다.</strong>
+        매주 이 파일 하나만 바꾸면 주보 내용이 바뀝니다. 나머지 파일은 처음 한 번만 올리면 끝!
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. GitHub setup -->
+  <section id="github">
+    <h2>🐙 2. 깃허브 계정 만들기 · 저장소 만들기</h2>
+    <p>깃허브(GitHub)는 <strong>파일을 무료로 인터넷에 올려주는 곳</strong>입니다.</p>
+
+    <ol class="step-list">
+      <li>
+        <span class="step-title">깃허브 계정 만들기</span>
+        <a href="https://github.com/signup" target="_blank" rel="noopener" class="link">github.com/signup</a> 에 접속해서
+        이메일·비밀번호·사용자명(예: <code>inpyeong-church</code>)을 입력해 무료 계정을 만드세요.
+      </li>
+      <li>
+        <span class="step-title">저장소(Repository) 만들기</span>
+        로그인 후 오른쪽 위 <kbd>+</kbd> 아이콘 → <strong>New repository</strong> 클릭.
+        <ul>
+          <li><strong>Repository name</strong>: <code>inpyeong-bulletin</code> (원하는 이름 아무거나 가능)</li>
+          <li><strong>Public</strong> 선택 (성도님들이 볼 수 있어야 하니 반드시 Public)</li>
+          <li><strong>Add a README file</strong> 체크</li>
+          <li>맨 아래 <strong>Create repository</strong> 클릭</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="callout note">
+      <span class="cico">📝</span>
+      <div>
+        <strong>Public / Private란?</strong>
+        Public = 누구나 볼 수 있음 (주보에 필요), Private = 나만 볼 수 있음.
+        <strong>주보는 반드시 Public</strong>이어야 성도님들이 접속할 수 있습니다.
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Upload -->
+  <section id="upload">
+    <h2>📤 3. 주보 파일 업로드하기</h2>
+    <p>목사님이 받으신 모든 파일(HTML 파일들 + <code>data</code> 폴더)을 깃허브에 올립니다.</p>
+
+    <ol class="step-list">
+      <li>
+        <span class="step-title">저장소 화면에서 "uploading an existing file" 클릭</span>
+        방금 만든 저장소 화면에 <strong>"Add file → Upload files"</strong> 버튼이 있습니다.
+      </li>
+      <li>
+        <span class="step-title">파일 전체를 드래그해서 넣기</span>
+        내려받으신 주보 폴더 안의 모든 파일과 <code>data</code> 폴더를 <strong>한 번에 끌어다</strong> 업로드 영역에 놓으세요.
+      </li>
+      <li>
+        <span class="step-title">Commit changes 클릭</span>
+        페이지 맨 아래 초록색 <strong>Commit changes</strong> 버튼을 누르면 업로드 완료!
+      </li>
+    </ol>
+
+    <div class="callout warn">
+      <span class="cico">⚠️</span>
+      <div>
+        <strong><code>data</code> 폴더째로</strong> 함께 올려주세요.
+        <code>bulletin.json</code>이 폴더 안에 있어야 주보가 정상 작동합니다.
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Pages -->
+  <section id="pages">
+    <h2>🌐 4. GitHub Pages로 인터넷에 공개하기</h2>
+    <p>GitHub Pages는 <strong>깃허브의 무료 홈페이지 서비스</strong>입니다. 이걸 켜면 <code>https://사용자명.github.io/저장소이름/</code> 주소가 만들어집니다.</p>
+
+    <ol class="step-list">
+      <li>
+        <span class="step-title">저장소 위쪽 Settings 탭 클릭</span>
+      </li>
+      <li>
+        <span class="step-title">왼쪽 메뉴에서 Pages 클릭</span>
+      </li>
+      <li>
+        <span class="step-title">Source 설정</span>
+        <strong>Source</strong>를 <code>Deploy from a branch</code>로,
+        <strong>Branch</strong>를 <code>main</code> / <code>/(root)</code>로 선택 후 <strong>Save</strong>.
+      </li>
+      <li>
+        <span class="step-title">1-2분 기다린 뒤 위쪽에 나타나는 주소 확인</span>
+        <code>Your site is live at https://<span style="color:var(--gold)">사용자명</span>.github.io/<span style="color:var(--gold)">inpyeong-bulletin</span>/</code>
+        <br>
+        여기서 <strong>홈 화면</strong>은 <code>home.html</code>, <strong>주보 바로 열기</strong>는 뒤에
+        <code>index.html</code>을 붙이시면 됩니다.
+      </li>
+    </ol>
+
+    <div class="callout tip">
+      <span class="cico">💡</span>
+      <div>
+        보통 <strong>주보 링크는 <code>.../index.html</code>로 안내</strong>하시면 성도님들이 바로 주보 화면을 볼 수 있어 편합니다.
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. QR -->
+  <section id="qr">
+    <h2>📱 5. QR 코드 만들어 성도님께 안내하기</h2>
+    <ol class="step-list">
+      <li>
+        <span class="step-title">이 프로젝트의 <code>qr.html</code> 페이지 열기</span>
+        홈 화면에서 <strong>QR 코드</strong> 타일 클릭.
+      </li>
+      <li>
+        <span class="step-title">주소 붙여넣기</span>
+        4번 단계에서 만든 <code>https://.../index.html</code> 주소를 입력창에 붙여넣으세요.
+      </li>
+      <li>
+        <span class="step-title">이미지 다운로드 → 종이 주보/게시판에 인쇄</span>
+        어르신 성도님도 <strong>스마트폰 카메라만 켜서 QR을 비추면</strong> 주보가 저절로 열립니다.
+      </li>
+    </ol>
+    <div class="callout note">
+      <span class="cico">✝️</span>
+      <div>
+        <strong>어르신 안내 문구 예시:</strong> "카메라 앱을 켜서 이 그림을 비추기만 하시면 주보가 열립니다. 앱 설치 필요 없습니다."
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Weekly update -->
+  <section id="weekly">
+    <h2>🔄 6. 매주 주보 내용 바꾸는 방법</h2>
+    <p>여기가 가장 자주 하시게 될 작업입니다. <strong>두 가지 방법</strong> 중 편하신 걸로 하세요.</p>
+
+    <h3>방법 A. 편집 화면에서 바꾸기 (초보자 추천)</h3>
+    <ol class="step-list">
+      <li>
+        <span class="step-title">edit.html 열기</span>
+        홈 → <strong>주보 편집</strong> 타일 클릭.
+      </li>
+      <li>
+        <span class="step-title">내용 수정</span>
+        예배 날짜, 찬송, 성경 봉독, 설교 제목, 교회 소식 등 <strong>필요한 부분만 바꾸세요</strong>.
+      </li>
+      <li>
+        <span class="step-title">💾 브라우저 저장 → 미리보기</span>
+        <strong>미리보기</strong>로 실제 어떻게 보이는지 확인하세요.
+      </li>
+      <li>
+        <span class="step-title">📥 JSON 다운로드</span>
+        <code>bulletin-20260913.json</code> 같은 파일이 다운로드됩니다.
+      </li>
+      <li>
+        <span class="step-title">깃허브에 올리기</span>
+        깃허브 저장소 → <code>data</code> 폴더로 들어가서 → <strong>Add file → Upload files</strong> →
+        방금 받은 JSON 파일을 드래그. <strong>단, 이름을 <code>bulletin.json</code>으로 바꿔서</strong> 올려야 합니다
+        (기존 파일을 덮어씀).<br>
+        <div class="callout tip" style="margin:8px 0 0 0">
+          <span class="cico">💡</span>
+          <div>더 쉬운 방법: 깃허브에서 기존 <code>data/bulletin.json</code>을 클릭 → 연필 아이콘 🖉 <strong>Edit</strong> 클릭 → 전체 내용을 지우고 → 방금 다운로드한 파일의 내용을 붙여넣기 → <strong>Commit changes</strong>.</div>
+        </div>
+      </li>
+      <li>
+        <span class="step-title">1-2분 뒤 새로고침</span>
+        성도님들의 주보 페이지도 자동으로 새 내용으로 바뀝니다!
+      </li>
+    </ol>
+
+    <h3>방법 B. JSON 파일 직접 편집 (익숙해지신 뒤)</h3>
+    <p>
+      깃허브에서 <code>data/bulletin.json</code>을 클릭 → 연필 아이콘 🖉 → 원하는 부분만 수정 → <strong>Commit changes</strong>.
+    </p>
+    <div class="callout warn">
+      <span class="cico">⚠️</span>
+      <div>
+        JSON 파일은 <strong>쉼표(,)와 따옴표(")를 정확히</strong> 지켜야 합니다.
+        실수하시면 주보가 안 뜰 수 있어요. 익숙해지시기 전엔 <strong>방법 A</strong>를 추천드립니다.
+      </div>
+    </div>
+
+    <h3>이전 주보 보관하기</h3>
+    <p>
+      새 주보를 올리기 전에, <strong>보관함 페이지</strong>에서 <strong>[💾 현재 주보 보관함에 추가]</strong>를 누르시면
+      브라우저에 이전 주보가 저장됩니다. 완전한 영구 보관을 원하시면 <strong>JSON 다운로드</strong> 파일을
+      깃허브의 <code>archive/</code> 폴더에 <code>2026-09-13.json</code>처럼 날짜별로 저장하세요.
+    </p>
+  </section>
+
+  <!-- 7. Tips -->
+  <section id="tips">
+    <h2>💡 7. 실전 팁 & 자주 묻는 질문</h2>
+
+    <h3>Q. 찬송 악보 이미지는 어떻게 넣나요?</h3>
+    <p>
+      악보 이미지 파일을 깃허브 저장소에 <code>images/hymn370.jpg</code>처럼 올리신 뒤,
+      편집 화면 → 해당 찬송 항목 → <strong>악보 이미지 URL</strong>에 <code>images/hymn370.jpg</code>를 입력하세요.
+    </p>
+
+    <h3>Q. 성경 본문 링크는 어떻게 연결되나요?</h3>
+    <p>
+      주보에서 성경 봉독을 누르면 <strong>대한성서공회 온라인 성경</strong>으로 이동하는 링크가 자동으로 표시됩니다.
+      본문은 편집 화면에서 <strong>개역개정</strong>으로 직접 입력하시면 됩니다.
+    </p>
+
+    <h3>Q. 어르신 성도님들이 글씨가 작다고 하시면?</h3>
+    <p>
+      주보 화면 오른쪽 위 <strong>가 · 가 · 가</strong> 버튼으로 글자 크기를 3단계로 조절할 수 있습니다.
+      또 옆의 <strong>◐</strong> 버튼으로 밤에 보기 편한 어두운 모드로 바뀝니다. 한 번 설정하면 다음에도 그대로 유지됩니다.
+    </p>
+
+    <h3>Q. 인터넷 없이도 볼 수 있나요?</h3>
+    <p>
+      최초 한 번 열어보시면 폰에 잠깐 저장되지만, 완전한 오프라인 사용을 원하시면
+      <strong>인쇄용 주보(print.html)</strong>를 PDF로 저장해 카톡으로 보내드리는 방법이 있습니다.
+    </p>
+
+    <h3>Q. 헌금 계좌 정보는 안전한가요?</h3>
+    <p>
+      계좌번호는 <strong>공개적으로 노출</strong>됩니다(누구나 볼 수 있는 페이지이므로). 이는 대부분 교회가 하는 방식이지만,
+      민감하시다면 실제 계좌 대신 <code>담임목사에게 문의</code> 같은 문구로 두시는 것도 방법입니다.
+    </p>
+
+    <h3>Q. 앞으로 유지보수는 어떻게 하나요?</h3>
+    <ul>
+      <li>주보 내용만 바꾸실 거라면 → <strong>매주 <code>bulletin.json</code>만 갱신</strong></li>
+      <li>디자인·기능 개선이 필요하면 → 다시 저를 찾아주세요 🙂</li>
+    </ul>
+
+    <div class="callout tip">
+      <span class="cico">🙏</span>
+      <div>
+        어려운 부분이 있으시면 언제든 편히 물어봐 주세요. 인평교회 성도님들이 주보를 편하게 볼 수 있도록 계속 다듬어 드리겠습니다.
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    ✝️ 주 예수 그리스도의 은혜와 하나님의 사랑과 성령의 교통하심이 채수호 목사님과 인평교회 위에 함께하시길 🙏
+  </div>
+
+</div>
+
+</body>
+</html>

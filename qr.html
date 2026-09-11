@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR 코드 · 인평교회 주보</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<style>
+  :root {
+    --ivory: #FAF6EE;
+    --ivory-2: #F3ECDC;
+    --navy: #1B2A4E;
+    --navy-2: #2D4373;
+    --gold: #B08A3E;
+    --ink: #2A2620;
+    --ink-mute: #6B655A;
+    --line: #E5DCC6;
+    --card: #FFFFFF;
+    --shadow: 0 4px 20px rgba(27,42,78,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', system-ui, sans-serif;
+    background: var(--ivory);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+  .topbar {
+    background: var(--navy);
+    color: var(--ivory);
+    padding: 18px 20px;
+    margin-bottom: 24px;
+  }
+  .topbar-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .topbar h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .topbar a {
+    color: var(--ivory);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.15rem;
+    color: var(--navy);
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--line);
+  }
+  .field {
+    margin-bottom: 14px;
+  }
+  .field label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    background: var(--ivory);
+    color: var(--ink);
+  }
+  .qr-display {
+    text-align: center;
+    padding: 30px 20px;
+    background: #fff;
+  }
+  #qrCode {
+    display: inline-block;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  #qrCode canvas {
+    display: block;
+  }
+  .qr-caption {
+    margin-top: 20px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .qr-sub {
+    margin-top: 4px;
+    color: var(--ink-mute);
+    font-size: 0.95rem;
+  }
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--card);
+    color: var(--ink);
+    text-decoration: none;
+    min-height: 42px;
+  }
+  .btn:hover { background: var(--ivory-2); }
+  .btn.primary {
+    background: var(--navy);
+    color: var(--ivory);
+    border-color: var(--navy);
+  }
+  .btn.primary:hover { background: var(--navy-2); }
+  .help {
+    background: #FFF8E7;
+    border: 1px solid #E8D89A;
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: #6B5B1E;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .help strong { color: var(--navy); }
+  .help ol { margin-left: 18px; margin-top: 8px; }
+  .help li { margin-bottom: 4px; }
+
+  .print-card {
+    display: none;
+  }
+  @media print {
+    .topbar, .container > .card:not(.print-card), .container > .help { display: none; }
+    body { background: #fff; padding: 0; }
+    .print-card { display: block; text-align: center; padding: 40px; }
+    .print-card #qrCode { border: none; padding: 0; }
+    .print-card .qr-caption { font-size: 1.8rem; margin-top: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <h1>📱 주보 QR 코드</h1>
+    <a href="index.html">← 주보 보기</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="help">
+    <strong>QR 코드 사용법</strong>
+    <ol>
+      <li>주보를 깃허브에 올려 <strong>공개 링크</strong>를 만든 뒤 (README 참고)</li>
+      <li>아래에 그 링크(예: <code>https://인평교회.github.io</code>)를 붙여넣으세요.</li>
+      <li><strong>[다운로드]</strong>로 QR 이미지를 저장해 주보 앞장·게시판에 인쇄하시면 됩니다.</li>
+      <li>어르신 성도님도 <strong>카메라 앱을 켜서 QR을 비추기만</strong> 하면 주보가 열립니다.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>🔗 주보 링크</h2>
+    <div class="field">
+      <label>공유할 주소 (URL)</label>
+      <input type="text" id="urlInput" placeholder="https://example.github.io/inpyeong-bulletin/">
+    </div>
+    <div class="field">
+      <label>안내 문구 (인쇄용, 선택)</label>
+      <input type="text" id="captionInput" value="인평교회 주보">
+    </div>
+    <div class="field">
+      <label>부제 (선택)</label>
+      <input type="text" id="subInput" value="카메라로 QR을 찍으면 열립니다">
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📷 QR 코드</h2>
+    <div class="qr-display">
+      <div id="qrCode"></div>
+      <div class="qr-caption" id="captionOut">인평교회 주보</div>
+      <div class="qr-sub" id="subOut">카메라로 QR을 찍으면 열립니다</div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="downloadBtn">📥 이미지 다운로드 (PNG)</button>
+      <button class="btn" id="printBtn">🖨️ 인쇄</button>
+      <button class="btn" id="copyBtn">🔗 링크 복사</button>
+    </div>
+  </div>
+
+  <!-- Print-only view -->
+  <div class="card print-card">
+    <div id="qrPrint" style="display:inline-block;padding:0"></div>
+    <div class="qr-caption">인평교회 주보</div>
+    <div class="qr-sub">카메라로 QR을 찍으면 열립니다</div>
+  </div>
+
+</div>
+
+<script>
+  const urlInput = document.getElementById('urlInput');
+  const capIn = document.getElementById('captionInput');
+  const subIn = document.getElementById('subInput');
+  const capOut = document.getElementById('captionOut');
+  const subOut = document.getElementById('subOut');
+  const qrEl = document.getElementById('qrCode');
+  const qrPrintEl = document.getElementById('qrPrint');
+
+  // Default: current location origin
+  const defaultUrl = window.location.href.replace(/qr\.html.*$/, 'index.html');
+  urlInput.value = localStorage.getItem('inpyeong-qr-url') || defaultUrl;
+  capIn.value = localStorage.getItem('inpyeong-qr-cap') || '인평교회 주보';
+  subIn.value = localStorage.getItem('inpyeong-qr-sub') || '카메라로 QR을 찍으면 열립니다';
+
+  function renderQR() {
+    const url = urlInput.value.trim() || defaultUrl;
+    localStorage.setItem('inpyeong-qr-url', url);
+    localStorage.setItem('inpyeong-qr-cap', capIn.value);
+    localStorage.setItem('inpyeong-qr-sub', subIn.value);
+    qrEl.innerHTML = '';
+    qrPrintEl.innerHTML = '';
+    QRCode.toCanvas(url, {
+      width: 320,
+      margin: 2,
+      color: { dark: '#1B2A4E', light: '#FFFFFF' },
+      errorCorrectionLevel: 'M'
+    }, (err, canvas) => {
+      if (err) { qrEl.textContent = 'QR 생성 실패'; return; }
+      qrEl.appendChild(canvas);
+      const clone = canvas.cloneNode();
+      clone.getContext('2d').drawImage(canvas, 0, 0);
+      qrPrintEl.appendChild(clone);
+    });
+    capOut.textContent = capIn.value || '인평교회 주보';
+    subOut.textContent = subIn.value || '';
+  }
+
+  urlInput.addEventListener('input', renderQR);
+  capIn.addEventListener('input', renderQR);
+  subIn.addEventListener('input', renderQR);
+
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    const canvas = qrEl.querySelector('canvas');
+    if (!canvas) return;
+    // Composite with caption on white background
+    const W = 600, H = 780;
+    const out = document.createElement('canvas');
+    out.width = W; out.height = H;
+    const ctx = out.getContext('2d');
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, W, H);
+    // Border frame
+    ctx.strokeStyle = '#1B2A4E';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(20, 20, W - 40, H - 40);
+    // QR
+    const qrSize = 440;
+    ctx.drawImage(canvas, (W - qrSize) / 2, 80, qrSize, qrSize);
+    // Caption
+    ctx.fillStyle = '#1B2A4E';
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 42px "Noto Serif KR", serif';
+    ctx.fillText(capIn.value || '인평교회 주보', W / 2, 620);
+    ctx.fillStyle = '#6B655A';
+    ctx.font = '24px "Noto Sans KR", sans-serif';
+    ctx.fillText(subIn.value || '', W / 2, 670);
+    ctx.font = '18px "Noto Sans KR", sans-serif';
+    ctx.fillStyle = '#B08A3E';
+    ctx.fillText(urlInput.value.slice(0, 60), W / 2, 720);
+
+    const a = document.createElement('a');
+    a.href = out.toDataURL('image/png');
+    a.download = '인평교회-주보-QR.png';
+    a.click();
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(urlInput.value);
+      const btn = document.getElementById('copyBtn');
+      const orig = btn.textContent;
+      btn.textContent = '✓ 복사되었습니다';
+      setTimeout(() => btn.textContent = orig, 1500);
+    } catch(e) { alert(urlInput.value); }
+  });
+
+  renderQR();
+</script>
+</body>
+</html>

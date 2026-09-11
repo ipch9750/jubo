@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>주보 인쇄 · 인평교회</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #FAF6EE;
+    --navy: #1B2A4E;
+    --gold: #B08A3E;
+    --ink: #2A2620;
+    --ink-mute: #6B655A;
+    --line: #E5DCC6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #E8E4DA;
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 30px 20px;
+  }
+  .toolbar {
+    max-width: 794px;
+    margin: 0 auto 20px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-decoration: none;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn.primary {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+  .sheet {
+    max-width: 794px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 40px 48px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.15);
+    min-height: 1123px;
+    font-size: 11pt;
+  }
+  .head {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 3px double var(--navy);
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .head .name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22pt;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+  }
+  .head .type {
+    margin-top: 8px;
+    font-size: 14pt;
+    color: var(--navy);
+    font-weight: 500;
+  }
+  .head .date {
+    margin-top: 4px;
+    font-size: 11pt;
+    color: var(--ink-mute);
+  }
+  .verse {
+    background: var(--ivory);
+    border-left: 4px solid var(--gold);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+  }
+  .verse-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 12pt;
+    line-height: 1.7;
+    color: var(--navy);
+  }
+  .verse-ref {
+    margin-top: 6px;
+    text-align: right;
+    font-size: 10pt;
+    color: var(--gold);
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 24px;
+  }
+  h2.sec {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13pt;
+    color: var(--navy);
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--line);
+    margin-bottom: 12px;
+  }
+  .order-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+  }
+  .order-table td {
+    padding: 6px 4px;
+    border-bottom: 1px dotted var(--line);
+    vertical-align: top;
+  }
+  .order-table td.num {
+    width: 24px;
+    color: var(--gold);
+    font-weight: 700;
+    font-family: 'Noto Serif KR', serif;
+  }
+  .order-table td.name {
+    color: var(--navy);
+    font-weight: 500;
+    white-space: nowrap;
+    padding-right: 8px;
+  }
+  .order-table td.sub {
+    color: var(--ink-mute);
+    font-size: 10pt;
+  }
+  .news-block {
+    margin-bottom: 14px;
+  }
+  .news-cat {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 10.5pt;
+    margin-bottom: 4px;
+  }
+  .news-cat::before {
+    content: "■ ";
+    color: var(--gold);
+  }
+  .news-block ul {
+    list-style: none;
+    padding-left: 12px;
+  }
+  .news-block li {
+    font-size: 10pt;
+    line-height: 1.6;
+    padding: 2px 0;
+    color: var(--ink);
+    position: relative;
+    padding-left: 10px;
+  }
+  .news-block li::before {
+    content: "·";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .account {
+    margin-top: 20px;
+    padding: 12px 16px;
+    background: var(--ivory);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 10pt;
+  }
+  .account strong { color: var(--navy); font-family: 'Noto Serif KR', serif; }
+  .foot {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    color: var(--ink-mute);
+    font-size: 9.5pt;
+    font-family: 'Noto Serif KR', serif;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar { display: none; }
+    .sheet { box-shadow: none; padding: 20mm; margin: 0; max-width: none; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <a class="btn" href="index.html">← 주보 보기</a>
+  <button class="btn primary" onclick="window.print()">🖨️ 인쇄 · PDF 저장</button>
+</div>
+
+<div class="sheet" id="sheet">
+  <div class="head">
+    <div class="name" id="churchName"></div>
+    <div class="type" id="serviceType"></div>
+    <div class="date" id="serviceDate"></div>
+  </div>
+
+  <div class="verse">
+    <div class="verse-text" id="verseText"></div>
+    <div class="verse-ref" id="verseRef"></div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h2 class="sec">예배 순서</h2>
+      <table class="order-table"><tbody id="orderBody"></tbody></table>
+
+      <div class="account">
+        <strong>헌금 계좌</strong><br>
+        <span id="accountLine"></span>
+      </div>
+    </div>
+    <div>
+      <h2 class="sec">교회 소식</h2>
+      <div id="newsBody"></div>
+    </div>
+  </div>
+
+  <div class="foot" id="foot">주님의 평강이 함께하시길 바랍니다 🙏</div>
+</div>
+
+<script>
+  function esc(s) {
+    return String(s || '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  }
+
+  function summarize(item) {
+    if (item.type === 'hymn') return `${item.number || ''} ${item.hymnTitle || ''}`.trim();
+    if (item.type === 'scripture') return item.reference || '';
+    if (item.type === 'sermon') return item.content || '';
+    if (item.type === 'prayer' || item.type === 'benediction') return item.leader || '';
+    if (item.type === 'call' || item.type === 'offering') return item.content || item.leader || '';
+    return '';
+  }
+
+  async function loadData() {
+    const draft = localStorage.getItem('inpyeong-bulletin-draft');
+    if (draft) {
+      try { return JSON.parse(draft); } catch(e) {}
+    }
+    const res = await fetch('data/bulletin.json?t=' + Date.now());
+    return await res.json();
+  }
+
+  loadData().then(data => {
+    document.getElementById('churchName').textContent = data.church.name;
+    document.getElementById('serviceType').textContent = data.service.type;
+    document.getElementById('serviceDate').textContent = data.service.date + (data.service.time ? ' · ' + data.service.time : '');
+    document.getElementById('verseText').textContent = '"' + data.service.verse.text + '"';
+    document.getElementById('verseRef').textContent = data.service.verse.reference;
+    document.getElementById('accountLine').textContent = `${data.church.account.bank} ${data.church.account.number} (${data.church.account.holder})`;
+    document.title = `${data.church.name} 주보 · ${data.service.date}`;
+
+    const ob = document.getElementById('orderBody');
+    data.service.order.forEach((item, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="num">${i + 1}</td>
+        <td class="name">${esc(item.title)}</td>
+        <td class="sub">${esc(summarize(item))}</td>
+      `;
+      ob.appendChild(tr);
+    });
+
+    const nb = document.getElementById('newsBody');
+    (data.news || []).forEach(sec => {
+      const div = document.createElement('div');
+      div.className = 'news-block';
+      div.innerHTML = `
+        <div class="news-cat">${esc(sec.category)}</div>
+        <ul>${(sec.items || []).map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+      `;
+      nb.appendChild(div);
+    });
+  });
+</script>
+</body>
+</html>

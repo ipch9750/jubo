@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인평교회 온라인 주보</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #FAF6EE;
+    --ivory-2: #F3ECDC;
+    --navy: #1B2A4E;
+    --gold: #B08A3E;
+    --ink: #2A2620;
+    --ink-mute: #6B655A;
+    --line: #E5DCC6;
+    --card: #FFFFFF;
+    --shadow: 0 4px 20px rgba(27,42,78,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--ivory);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+  }
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .hero {
+    text-align: center;
+    padding: 40px 20px 30px;
+    border-bottom: 2px solid var(--line);
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 20px;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+  }
+  .hero h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 2.2rem;
+    color: var(--navy);
+    margin-top: 24px;
+    letter-spacing: -0.02em;
+  }
+  .hero .sub {
+    color: var(--ink-mute);
+    margin-top: 10px;
+    font-size: 1.05rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+  }
+  .tile {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px 24px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: var(--shadow);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(27,42,78,0.12);
+  }
+  .tile.primary {
+    background: linear-gradient(135deg, var(--navy) 0%, #2D4373 100%);
+    color: #fff;
+    border-color: var(--navy);
+    grid-column: span 2;
+  }
+  @media (max-width: 640px) {
+    .tile.primary { grid-column: span 1; }
+  }
+  .tile-icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+  }
+  .tile-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .tile.primary .tile-title { color: #fff; }
+  .tile-desc {
+    color: var(--ink-mute);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .tile.primary .tile-desc { color: rgba(255,255,255,0.85); }
+  .tile-cta {
+    margin-top: auto;
+    padding-top: 12px;
+    font-size: 0.9rem;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .tile.primary .tile-cta { color: #D4B26A; }
+  .foot {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    color: var(--ink-mute);
+    font-family: 'Noto Serif KR', serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>인평교회 온라인 주보</h1>
+    <div class="sub">경상북도 칠곡군 북삼읍 · 채수호 목사</div>
+  </div>
+
+  <div class="grid">
+    <a href="index.html" class="tile primary">
+      <div class="tile-icon">📖</div>
+      <div class="tile-title">주보 보기</div>
+      <div class="tile-desc">이번 주 예배 순서, 찬송 가사, 성경 봉독, 교회 소식을 한 곳에서 확인하세요.</div>
+      <div class="tile-cta">지금 열기 →</div>
+    </a>
+
+    <a href="edit.html" class="tile">
+      <div class="tile-icon">✏️</div>
+      <div class="tile-title">주보 편집</div>
+      <div class="tile-desc">브라우저에서 주보 내용을 바로 수정하고, JSON 파일로 내보내세요.</div>
+      <div class="tile-cta">편집 시작 →</div>
+    </a>
+
+    <a href="qr.html" class="tile">
+      <div class="tile-icon">📱</div>
+      <div class="tile-title">QR 코드</div>
+      <div class="tile-desc">성도님들이 카메라로 찍기만 하면 주보가 열리는 QR 이미지를 만드세요.</div>
+      <div class="tile-cta">QR 만들기 →</div>
+    </a>
+
+    <a href="archive.html" class="tile">
+      <div class="tile-icon">📚</div>
+      <div class="tile-title">이전 주보</div>
+      <div class="tile-desc">지난 주보를 보관함에 저장하고 언제든 다시 열어보세요.</div>
+      <div class="tile-cta">보관함 열기 →</div>
+    </a>
+
+    <a href="print.html" class="tile">
+      <div class="tile-icon">🖨️</div>
+      <div class="tile-title">인쇄용 주보</div>
+      <div class="tile-desc">A4 종이 주보로 인쇄하거나 PDF로 저장할 수 있는 깔끔한 판형입니다.</div>
+      <div class="tile-cta">인쇄 화면 열기 →</div>
+    </a>
+
+    <a href="README.html" class="tile">
+      <div class="tile-icon">📘</div>
+      <div class="tile-title">사용 설명서</div>
+      <div class="tile-desc">깃허브 업로드, 매주 주보 업데이트 방법 등 초보자용 안내입니다.</div>
+      <div class="tile-cta">가이드 열기 →</div>
+    </a>
+  </div>
+
+  <div class="foot">주님의 은혜와 평강이 함께하시길 🙏</div>
+</div>
+
+</body>
+</html>
