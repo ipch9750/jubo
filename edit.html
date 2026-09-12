@@ -301,6 +301,41 @@
     font-size: 0.8rem;
     font-weight: 500;
   }
+
+  /* Responsive / commission line rows */
+  .lines-container { display: flex; flex-direction: column; gap: 8px; }
+  .lines-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 40px;
+    gap: 8px;
+    align-items: start;
+  }
+  .lines-row select {
+    padding: 8px 6px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--card);
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--ink);
+    height: 44px;
+  }
+  .lines-row textarea {
+    min-height: 60px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    background: var(--card);
+    color: var(--ink);
+    resize: vertical;
+  }
+  .lines-row textarea:focus { outline: none; border-color: var(--navy); }
+  @media (max-width: 640px) {
+    .lines-row { grid-template-columns: 90px 1fr 36px; gap: 6px; }
+  }
 </style>
 </head>
 <body>
@@ -320,7 +355,9 @@
     <strong>사용법:</strong> 아래 내용을 수정한 뒤,
     <strong>[💾 브라우저 저장]</strong>을 누르면 이 브라우저의 주보 페이지에 바로 반영됩니다.
     깃허브에 올려서 성도님들과 공유하시려면 <strong>[📥 JSON 다운로드]</strong>로 파일을 받은 뒤
-    <code>data/bulletin.json</code> 위치에 덮어써 주세요.
+    <code>data/bulletin.json</code> 위치에 덮어써 주세요.<br>
+    <strong>예배 순서</strong>는 아래에서 항목마다 <em>↑ ↓ 🗑</em>으로 위치·삭제, 하단 버튼으로 새 항목을 추가하실 수 있습니다.
+    (경배와찬양·성시교독·신앙고백·파송사도 지원)
   </div>
 
   <!-- Church -->
@@ -377,14 +414,18 @@
     <div class="section-header">📋 예배 순서</div>
     <div id="orderContainer"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <button class="btn small" data-add="praise">＋ 경배와찬양</button>
       <button class="btn small" data-add="call">＋ 예배부름</button>
       <button class="btn small" data-add="hymn">＋ 찬송</button>
+      <button class="btn small" data-add="responsive">＋ 성시교독</button>
+      <button class="btn small" data-add="creed">＋ 신앙고백</button>
       <button class="btn small" data-add="prayer">＋ 기도</button>
       <button class="btn small" data-add="scripture">＋ 성경봉독</button>
       <button class="btn small" data-add="sermon">＋ 설교</button>
       <button class="btn small" data-add="offering">＋ 봉헌</button>
       <button class="btn small" data-add="notice">＋ 광고</button>
-      <button class="btn small" data-add="benediction">＋ 축도</button>
+      <button class="btn small" data-add="commission">＋ 파송사</button>
+      <button class="btn small" data-add="benediction">＋ 강복선언</button>
     </div>
   </div>
 
@@ -414,13 +455,17 @@
 
 <script>
   const ORDER_TYPES = {
+    praise: '경배와 찬양',
     call: '예배의 부름',
     hymn: '찬송',
+    responsive: '성시교독',
+    creed: '신앙고백',
     prayer: '기도',
     scripture: '성경 봉독',
     sermon: '말씀 선포',
     offering: '봉헌',
     notice: '교회 소식',
+    commission: '파송사',
     benediction: '축도'
   };
 
@@ -513,6 +558,64 @@
       `;
     } else if (item.type === 'notice') {
       extraFields = `<div class="field" style="color:var(--ink-mute);font-size:0.9rem">교회 소식은 아래 [교회 소식] 섹션에서 편집합니다.</div>`;
+    } else if (item.type === 'creed') {
+      extraFields = `
+        <div class="field"><label>부제 (예: 사도신경 / 새번역 사도신경)</label><input type="text" data-k="subtitle" value="${escAttr(item.subtitle)}"></div>
+        <div class="field"><label>신앙고백 본문</label><textarea data-k="text" style="min-height:260px">${escHtml(item.text)}</textarea></div>
+      `;
+    } else if (item.type === 'responsive' || item.type === 'commission') {
+      const defaultLeader = item.type === 'commission' ? '집례' : '인도자';
+      const lines = Array.isArray(item.lines) && item.lines.length
+        ? item.lines
+        : [{ role: 'leader', text: '' }, { role: 'congregation', text: '' }];
+      const rowsHtml = lines.map((ln, li) => `
+        <div class="lines-row" data-li="${li}">
+          <select data-line-role>
+            <option value="leader" ${ln.role !== 'congregation' ? 'selected' : ''}>인도/집례</option>
+            <option value="congregation" ${ln.role === 'congregation' ? 'selected' : ''}>회중</option>
+          </select>
+          <textarea data-line-text placeholder="문장을 입력하세요">${escHtml(ln.text)}</textarea>
+          <button class="btn-icon danger" data-line-action="remove" title="삭제">🗑</button>
+        </div>
+      `).join('');
+      extraFields = `
+        <div class="field-row">
+          <div class="field"><label>인도자 표기</label><input type="text" data-k="leaderLabel" value="${escAttr(item.leaderLabel || defaultLeader)}"></div>
+          <div class="field"><label>회중 표기</label><input type="text" data-k="congregationLabel" value="${escAttr(item.congregationLabel || '회중')}"></div>
+        </div>
+        ${item.type === 'responsive' ? `<div class="field"><label>출처 (선택, 예: 시편 100편)</label><input type="text" data-k="reference" value="${escAttr(item.reference)}"></div>` : ''}
+        <div class="field">
+          <label>교독 문장 (교대로 배치, 여러 줄 추가 가능)</label>
+          <div class="lines-container">${rowsHtml}</div>
+          <button class="btn small" data-line-action="add-leader" style="margin-top:8px">＋ 인도/집례 문장</button>
+          <button class="btn small" data-line-action="add-congregation" style="margin-top:8px">＋ 회중 문장</button>
+        </div>
+      `;
+    } else if (item.type === 'praise') {
+      const songs = Array.isArray(item.songs) && item.songs.length
+        ? item.songs
+        : [{ title: '', lyrics: '', youtube: '' }];
+      const songsHtml = songs.map((sg, si) => `
+        <div class="song-row" data-si="${si}" style="background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px">
+          <div class="order-item-head" style="margin-bottom:8px">
+            <span class="type-label">곡 ${si + 1}</span>
+            <div class="order-controls">
+              <button class="btn-icon danger" data-song-action="remove" title="삭제">🗑</button>
+            </div>
+          </div>
+          <div class="field"><label>곡 제목</label><input type="text" data-song-k="title" value="${escAttr(sg.title)}"></div>
+          <div class="field"><label>가사 (선택)</label><textarea data-song-k="lyrics" style="min-height:100px">${escHtml(sg.lyrics)}</textarea></div>
+          <div class="field"><label>유튜브 링크 (선택)</label><input type="text" data-song-k="youtube" value="${escAttr(sg.youtube)}"></div>
+        </div>
+      `).join('');
+      extraFields = `
+        <div class="field"><label>안내 문구 (선택)</label><input type="text" data-k="content" value="${escAttr(item.content)}" placeholder="예: 찬양팀 인도"></div>
+        <div class="field">
+          <label>찬양 곡 목록</label>
+          <div class="songs-container">${songsHtml}</div>
+          <button class="btn small" data-song-action="add" style="margin-top:4px">＋ 곡 추가</button>
+        </div>
+      `;
     }
 
     el.innerHTML = `
@@ -528,7 +631,7 @@
       </div>
       ${extraFields}
     `;
-    el.querySelectorAll('[data-action]').forEach(btn => {
+    el.querySelectorAll(':scope > .order-item-head [data-action]').forEach(btn => {
       btn.addEventListener('click', () => {
         const i = idx;
         if (btn.dataset.action === 'remove') {
@@ -546,6 +649,42 @@
         }
       });
     });
+
+    // Responsive / Commission — line add/remove
+    el.querySelectorAll('[data-line-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        collectAll();
+        const item2 = state.service.order[idx];
+        if (!Array.isArray(item2.lines)) item2.lines = [];
+        const a = btn.dataset.lineAction;
+        if (a === 'add-leader') item2.lines.push({ role: 'leader', text: '' });
+        else if (a === 'add-congregation') item2.lines.push({ role: 'congregation', text: '' });
+        else if (a === 'remove') {
+          const row = btn.closest('.lines-row');
+          const li = parseInt(row.dataset.li);
+          item2.lines.splice(li, 1);
+        }
+        renderOrder();
+      });
+    });
+
+    // Praise — song add/remove
+    el.querySelectorAll('[data-song-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        collectAll();
+        const item2 = state.service.order[idx];
+        if (!Array.isArray(item2.songs)) item2.songs = [];
+        const a = btn.dataset.songAction;
+        if (a === 'add') item2.songs.push({ title: '', lyrics: '', youtube: '' });
+        else if (a === 'remove') {
+          const row = btn.closest('.song-row');
+          const si = parseInt(row.dataset.si);
+          item2.songs.splice(si, 1);
+        }
+        renderOrder();
+      });
+    });
+
     return el;
   }
 
@@ -624,9 +763,27 @@
     // Order items
     document.querySelectorAll('#orderContainer .order-item').forEach((el, idx) => {
       const item = state.service.order[idx];
+      // Only pick up direct data-k inputs (skip nested song/line fields, which use different attrs)
       el.querySelectorAll('[data-k]').forEach(input => {
         item[input.dataset.k] = input.value;
       });
+      // Responsive / commission — collect lines
+      if (item.type === 'responsive' || item.type === 'commission') {
+        const rows = el.querySelectorAll('.lines-row');
+        item.lines = Array.from(rows).map(r => ({
+          role: r.querySelector('[data-line-role]').value,
+          text: r.querySelector('[data-line-text]').value
+        }));
+      }
+      // Praise — collect songs
+      if (item.type === 'praise') {
+        const rows = el.querySelectorAll('.song-row');
+        item.songs = Array.from(rows).map(r => {
+          const obj = {};
+          r.querySelectorAll('[data-song-k]').forEach(inp => { obj[inp.dataset.songK] = inp.value; });
+          return obj;
+        });
+      }
     });
 
     // News
@@ -650,6 +807,28 @@
       if (type === 'scripture') Object.assign(newItem, { reference: '', text: '' });
       if (type === 'prayer' || type === 'benediction') newItem.leader = '';
       if (type === 'sermon' || type === 'call' || type === 'offering') newItem.content = '';
+      if (type === 'creed') Object.assign(newItem, { subtitle: '사도신경 (새번역)', text: '' });
+      if (type === 'responsive') Object.assign(newItem, {
+        reference: '',
+        leaderLabel: '인도자',
+        congregationLabel: '회중',
+        lines: [
+          { role: 'leader', text: '' },
+          { role: 'congregation', text: '' }
+        ]
+      });
+      if (type === 'commission') Object.assign(newItem, {
+        leaderLabel: '집례',
+        congregationLabel: '회중',
+        lines: [
+          { role: 'leader', text: '주의 은혜가 여러분에게 임하였으니 세상에 나가 소금과 빛의 사명을 감당하십시오.' },
+          { role: 'congregation', text: '우리가 주와 함께 가겠나이다.' }
+        ]
+      });
+      if (type === 'praise') Object.assign(newItem, {
+        content: '찬양팀 인도',
+        songs: [{ title: '', lyrics: '', youtube: '' }]
+      });
       state.service.order.push(newItem);
       renderOrder();
     });
@@ -712,5 +891,6 @@
 
   init();
 </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
