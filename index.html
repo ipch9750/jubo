@@ -627,6 +627,94 @@
   }
   [data-theme="dark"] .external-link { color: var(--gold-2); }
 
+  /* Responsive reading / creed / commission */
+  .rr-subtitle {
+    text-align: center;
+    color: var(--ink-mute);
+    font-size: 0.95rem;
+    margin-top: -8px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 20px;
+  }
+  .rr-ref {
+    text-align: center;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.15rem;
+    color: var(--navy);
+    padding: 8px 0 18px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  [data-theme="dark"] .rr-ref { color: var(--gold-2); }
+  .rr-line {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--line);
+    align-items: flex-start;
+  }
+  .rr-line:last-child { border-bottom: none; }
+  .rr-role {
+    flex-shrink: 0;
+    width: 54px;
+    padding: 4px 8px;
+    background: var(--ivory-2);
+    color: var(--navy);
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 6px;
+    text-align: center;
+    font-family: 'Noto Serif KR', serif;
+  }
+  .rr-line.congregation .rr-role {
+    background: var(--navy);
+    color: var(--ivory);
+  }
+  [data-theme="dark"] .rr-role { background: #2A2F3C; color: var(--gold-2); }
+  [data-theme="dark"] .rr-line.congregation .rr-role { background: var(--gold); color: #14171F; }
+  .rr-text {
+    flex: 1;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.08rem;
+    line-height: 1.85;
+    color: var(--ink);
+    text-wrap: pretty;
+    padding-top: 2px;
+  }
+  .rr-line.congregation .rr-text {
+    font-weight: 500;
+  }
+
+  .creed-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.12rem;
+    line-height: 2;
+    white-space: pre-wrap;
+    color: var(--ink);
+    text-wrap: pretty;
+    padding: 4px 4px 20px;
+  }
+
+  .praise-note {
+    padding: 40px 20px;
+    text-align: center;
+    background: var(--ivory-2);
+    border: 2px dashed var(--line);
+    border-radius: 12px;
+    color: var(--ink-mute);
+    font-family: 'Noto Serif KR', serif;
+    line-height: 1.9;
+  }
+  .praise-note strong {
+    display: block;
+    color: var(--navy);
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+  }
+  [data-theme="dark"] .praise-note strong { color: var(--gold-2); }
+
   /* Sermon detail */
   .sermon-title {
     font-family: 'Noto Serif KR', serif;
@@ -728,19 +816,10 @@
     <div class="service-date" id="serviceDate">2026년 9월 13일 주일</div>
   </header>
 
-  <section class="verse-card" id="verseCard" role="button" tabindex="0" aria-label="오늘의 말씀">
-    <div class="verse-label">오늘의 말씀</div>
-    <p class="verse-text" id="verseText"></p>
-    <div class="verse-ref" id="verseRef"></div>
-  </section>
-
   <h2 class="section-title">예배 순서</h2>
   <div class="order-list" id="orderList">
     <div class="loading">불러오는 중...</div>
   </div>
-
-  <h2 class="section-title">교회 소식</h2>
-  <div class="news-list" id="newsList"></div>
 
   <h2 class="section-title">헌금 계좌</h2>
   <div class="account-card">
@@ -896,6 +975,76 @@
     openModal('말씀 선포', html);
   }
 
+  function renderResponsive(item) {
+    const lines = (item.lines || []).filter(l => (l.text || '').trim());
+    const leaderLabel = item.leaderLabel || '인도자';
+    const congLabel = item.congregationLabel || '회중';
+    const body = lines.length
+      ? lines.map(l => {
+          const isCong = l.role === 'congregation';
+          const label = isCong ? congLabel : leaderLabel;
+          return `
+            <div class="rr-line ${isCong ? 'congregation' : ''}">
+              <div class="rr-role">${esc(label)}</div>
+              <div class="rr-text">${esc(l.text)}</div>
+            </div>
+          `;
+        }).join('')
+      : `<div class="praise-note">
+          <strong>내용을 준비 중입니다</strong>
+          편집 화면에서 성시교독 본문을<br>입력해 주세요.
+        </div>`;
+    const html = `
+      ${item.reference ? `<div class="rr-ref">${esc(item.reference)}</div>` : ''}
+      ${body}
+    `;
+    openModal(item.title || '성시교독', html);
+  }
+
+  function renderCreed(item) {
+    const html = `
+      ${item.subtitle ? `<div class="rr-subtitle">${esc(item.subtitle)}</div>` : ''}
+      <div class="creed-text">${esc(item.text || '내용이 준비되지 않았습니다.')}</div>
+    `;
+    openModal(item.title || '신앙고백', html);
+  }
+
+  function renderCommission(item) {
+    const lines = (item.lines || []).filter(l => (l.text || '').trim());
+    const leaderLabel = item.leaderLabel || '집례';
+    const congLabel = item.congregationLabel || '회중';
+    const body = lines.length
+      ? lines.map(l => {
+          const isCong = l.role === 'congregation';
+          const label = isCong ? congLabel : leaderLabel;
+          return `
+            <div class="rr-line ${isCong ? 'congregation' : ''}">
+              <div class="rr-role">${esc(label)}</div>
+              <div class="rr-text">${esc(l.text)}</div>
+            </div>
+          `;
+        }).join('')
+      : `<div class="praise-note"><strong>준비 중입니다</strong></div>`;
+    openModal(item.title || '파송사', body);
+  }
+
+  function renderPraise(item) {
+    const songs = (item.songs || []).filter(s => (s.title || '').trim() || (s.lyrics || '').trim());
+    const body = songs.length
+      ? songs.map(s => `
+          <div style="margin-bottom:24px">
+            ${s.title ? `<div class="hymn-title" style="text-align:left;font-size:1.25rem;margin-bottom:10px">${esc(s.title)}</div>` : ''}
+            ${s.lyrics ? `<div class="hymn-lyrics">${esc(s.lyrics)}</div>` : ''}
+            ${s.youtube ? `<a href="${esc(s.youtube)}" target="_blank" rel="noopener" class="youtube-link">▶ 유튜브로 듣기</a>` : ''}
+          </div>
+        `).join('<hr style="border:none;border-top:1px solid var(--line);margin:8px 0 20px">')
+      : `<div class="praise-note">
+          <strong>찬양팀 인도</strong>
+          이번 주 경배와 찬양 곡은<br>예배 시간에 함께 은혜받으시길 바랍니다.
+        </div>`;
+    openModal(item.title || '경배와 찬양', body);
+  }
+
   function renderNews(newsData) {
     const html = newsData.map(section => `
       <div class="news-item">
@@ -941,26 +1090,31 @@
   }
 
   function summarize(item) {
-    if (item.type === 'hymn') return `${item.number || ''} ${item.hymnTitle || ''}`.trim();
+    if (item.type === 'hymn') {
+      const parts = [item.number, item.hymnTitle].filter(Boolean);
+      return parts.join(' ') || '터치하여 열기';
+    }
     if (item.type === 'scripture') return item.reference || '';
     if (item.type === 'sermon') return item.content || '';
     if (item.type === 'prayer') return item.leader || '';
     if (item.type === 'benediction') return item.leader || '';
     if (item.type === 'call') return item.content || item.leader || '';
     if (item.type === 'offering') return item.content || '';
-    if (item.type === 'notice') return '아래 소식 참고';
+    if (item.type === 'notice') return '터치하여 열기';
+    if (item.type === 'praise') return item.content || '찬양팀 인도';
+    if (item.type === 'responsive') return item.reference || '터치하여 열기';
+    if (item.type === 'creed') return item.subtitle || '사도신경';
+    if (item.type === 'commission') return '터치하여 열기';
     return '';
   }
 
-  const CLICKABLE = new Set(['hymn', 'scripture', 'sermon', 'notice']);
+  const CLICKABLE = new Set(['hymn', 'scripture', 'sermon', 'notice', 'praise', 'responsive', 'creed', 'commission']);
 
   function render(data) {
     if (!data) return;
     document.getElementById('churchName').textContent = data.church.name;
     document.getElementById('serviceType').textContent = data.service.type;
     document.getElementById('serviceDate').textContent = data.service.date;
-    document.getElementById('verseText').textContent = data.service.verse.text;
-    document.getElementById('verseRef').textContent = data.service.verse.reference;
     document.getElementById('accountNum').textContent = `${data.church.account.bank} ${data.church.account.number}`;
     document.getElementById('accountHolder').textContent = '예금주: ' + data.church.account.holder;
     document.title = `${data.church.name} 주보 · ${data.service.date}`;
@@ -987,36 +1141,15 @@
           else if (item.type === 'scripture') renderScripture(item);
           else if (item.type === 'sermon') renderSermon(item, data.service.sermon || {});
           else if (item.type === 'notice') renderNews(data.news || []);
+          else if (item.type === 'praise') renderPraise(item);
+          else if (item.type === 'responsive') renderResponsive(item);
+          else if (item.type === 'creed') renderCreed(item);
+          else if (item.type === 'commission') renderCommission(item);
         });
       } else {
         btn.style.cursor = 'default';
       }
       orderList.appendChild(btn);
-    });
-
-    // Verse card click -> open sermon
-    document.getElementById('verseCard').addEventListener('click', () => {
-      renderSermon({ title: '말씀 선포' }, data.service.sermon || {});
-    });
-
-    // News list
-    const newsList = document.getElementById('newsList');
-    newsList.innerHTML = '';
-    (data.news || []).forEach(section => {
-      const item = document.createElement('details');
-      item.className = 'news-item';
-      item.innerHTML = `
-        <summary class="news-head" style="list-style:none;cursor:pointer">
-          <span>${esc(section.category)}</span>
-          <span class="news-caret">▾</span>
-        </summary>
-        <div class="news-body">
-          <ul>
-            ${section.items.map(i => `<li>${esc(i)}</li>`).join('')}
-          </ul>
-        </div>
-      `;
-      newsList.appendChild(item);
     });
 
     // Copy account
@@ -1046,5 +1179,6 @@
   `;
   document.head.appendChild(s);
 </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
