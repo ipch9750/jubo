@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QR 코드 · 인평교회 주보</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<!-- QR 라이브러리: 프로젝트 내 파일 사용 (오프라인 지원, CDN 의존성 없음) -->
+<script src="lib/qrcode.min.js"></script>
 <style>
   :root {
     --ivory: #FAF6EE;
@@ -249,33 +250,81 @@
   const qrEl = document.getElementById('qrCode');
   const qrPrintEl = document.getElementById('qrPrint');
 
-  // Default: current location origin
-  const defaultUrl = window.location.href.replace(/qr\.html.*$/, 'index.html');
+  // Default URL: 배포된 GitHub Pages 주소를 기본으로
+  const defaultUrl = 'https://ipch9750.github.io/jubo/';
   urlInput.value = localStorage.getItem('inpyeong-qr-url') || defaultUrl;
   capIn.value = localStorage.getItem('inpyeong-qr-cap') || '인평교회 주보';
   subIn.value = localStorage.getItem('inpyeong-qr-sub') || '카메라로 QR을 찍으면 열립니다';
+
+  function showQRError(msg) {
+    qrEl.innerHTML = `
+      <div style="padding:40px 20px;color:#B84A3E;font-size:0.95rem;line-height:1.7;text-align:center">
+        <div style="font-size:2rem;margin-bottom:10px">⚠️</div>
+        <div style="font-weight:700;margin-bottom:6px">QR 코드를 만들 수 없습니다</div>
+        <div style="color:#6B655A;font-size:0.9rem">${msg}</div>
+      </div>
+    `;
+  }
+
+  // qrcode-generator 로 QR 코드를 캔버스에 직접 그림 (dark/light 색상 제어 가능)
+  function drawQRToCanvas(text, size) {
+    // qrcode-generator: 0 = auto type number (자동으로 데이터 길이에 맞춰 최소 타입 선택)
+    const qr = qrcode(0, 'M');
+    qr.addData(text);
+    qr.make();
+    const moduleCount = qr.getModuleCount();
+    const margin = 2; // 주변 여백 (셀 단위)
+    const totalCells = moduleCount + margin * 2;
+    const cellSize = Math.floor(size / totalCells);
+    const canvasSize = cellSize * totalCells;
+    const canvas = document.createElement('canvas');
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+    const ctx = canvas.getContext('2d');
+    // 배경
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvasSize, canvasSize);
+    // 모듈(어두운 사각형) 그리기
+    ctx.fillStyle = '#1B2A4E';
+    for (let r = 0; r < moduleCount; r++) {
+      for (let c = 0; c < moduleCount; c++) {
+        if (qr.isDark(r, c)) {
+          ctx.fillRect((c + margin) * cellSize, (r + margin) * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+    return canvas;
+  }
 
   function renderQR() {
     const url = urlInput.value.trim() || defaultUrl;
     localStorage.setItem('inpyeong-qr-url', url);
     localStorage.setItem('inpyeong-qr-cap', capIn.value);
     localStorage.setItem('inpyeong-qr-sub', subIn.value);
-    qrEl.innerHTML = '';
-    qrPrintEl.innerHTML = '';
-    QRCode.toCanvas(url, {
-      width: 320,
-      margin: 2,
-      color: { dark: '#1B2A4E', light: '#FFFFFF' },
-      errorCorrectionLevel: 'M'
-    }, (err, canvas) => {
-      if (err) { qrEl.textContent = 'QR 생성 실패'; return; }
-      qrEl.appendChild(canvas);
-      const clone = canvas.cloneNode();
-      clone.getContext('2d').drawImage(canvas, 0, 0);
-      qrPrintEl.appendChild(clone);
-    });
     capOut.textContent = capIn.value || '인평교회 주보';
     subOut.textContent = subIn.value || '';
+
+    // 라이브러리 로드 확인
+    if (typeof qrcode === 'undefined') {
+      showQRError('QR 라이브러리를 불러올 수 없습니다.<br>lib/qrcode.min.js 파일이 저장소에 함께 올라갔는지 확인해 주세요.');
+      return;
+    }
+
+    try {
+      qrEl.innerHTML = '';
+      qrPrintEl.innerHTML = '';
+      const canvas = drawQRToCanvas(url, 320);
+      qrEl.appendChild(canvas);
+      // 인쇄용 사본
+      const clone = document.createElement('canvas');
+      clone.width = canvas.width;
+      clone.height = canvas.height;
+      clone.getContext('2d').drawImage(canvas, 0, 0);
+      qrPrintEl.appendChild(clone);
+    } catch (err) {
+      showQRError('QR 생성 실패: ' + (err.message || err));
+      console.error(err);
+    }
   }
 
   urlInput.addEventListener('input', renderQR);
@@ -284,37 +333,56 @@
 
   document.getElementById('downloadBtn').addEventListener('click', () => {
     const canvas = qrEl.querySelector('canvas');
-    if (!canvas) return;
-    // Composite with caption on white background
-    const W = 600, H = 780;
-    const out = document.createElement('canvas');
-    out.width = W; out.height = H;
-    const ctx = out.getContext('2d');
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, W, H);
-    // Border frame
-    ctx.strokeStyle = '#1B2A4E';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(20, 20, W - 40, H - 40);
-    // QR
-    const qrSize = 440;
-    ctx.drawImage(canvas, (W - qrSize) / 2, 80, qrSize, qrSize);
-    // Caption
-    ctx.fillStyle = '#1B2A4E';
-    ctx.textAlign = 'center';
-    ctx.font = 'bold 42px "Noto Serif KR", serif';
-    ctx.fillText(capIn.value || '인평교회 주보', W / 2, 620);
-    ctx.fillStyle = '#6B655A';
-    ctx.font = '24px "Noto Sans KR", sans-serif';
-    ctx.fillText(subIn.value || '', W / 2, 670);
-    ctx.font = '18px "Noto Sans KR", sans-serif';
-    ctx.fillStyle = '#B08A3E';
-    ctx.fillText(urlInput.value.slice(0, 60), W / 2, 720);
+    if (!canvas) {
+      alert('QR 코드가 아직 준비되지 않았습니다.\n\n주소(URL)를 확인하시고, 인터넷 연결 후 페이지를 새로고침 해주세요.');
+      return;
+    }
+    try {
+      // Composite with caption on white background
+      const W = 600, H = 780;
+      const out = document.createElement('canvas');
+      out.width = W; out.height = H;
+      const ctx = out.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, W, H);
+      // Border frame
+      ctx.strokeStyle = '#1B2A4E';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(20, 20, W - 40, H - 40);
+      // QR
+      const qrSize = 440;
+      ctx.drawImage(canvas, (W - qrSize) / 2, 80, qrSize, qrSize);
+      // Caption
+      ctx.fillStyle = '#1B2A4E';
+      ctx.textAlign = 'center';
+      ctx.font = 'bold 42px "Noto Serif KR", serif';
+      ctx.fillText(capIn.value || '인평교회 주보', W / 2, 620);
+      ctx.fillStyle = '#6B655A';
+      ctx.font = '24px "Noto Sans KR", sans-serif';
+      ctx.fillText(subIn.value || '', W / 2, 670);
+      ctx.font = '18px "Noto Sans KR", sans-serif';
+      ctx.fillStyle = '#B08A3E';
+      ctx.fillText(urlInput.value.slice(0, 60), W / 2, 720);
 
-    const a = document.createElement('a');
-    a.href = out.toDataURL('image/png');
-    a.download = '인평교회-주보-QR.png';
-    a.click();
+      // 브라우저 호환성: Blob 다운로드로 처리
+      out.toBlob((blob) => {
+        if (!blob) {
+          alert('PNG 이미지 생성에 실패했습니다.\n다른 브라우저(크롬 등)에서 다시 시도해 주세요.');
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '인평교회-주보-QR.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, 'image/png');
+    } catch (err) {
+      alert('다운로드 중 오류가 발생했습니다: ' + err.message);
+      console.error(err);
+    }
   });
 
   document.getElementById('printBtn').addEventListener('click', () => window.print());
@@ -331,5 +399,6 @@
 
   renderQR();
 </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
