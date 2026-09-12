@@ -18,36 +18,42 @@
       {
         "type": "hymn",
         "title": "경배와 찬양",
-        "number": "",
+        "number": "지존하신 주님 이름 앞",
         "hymnTitle": "일어서서",
-        "lyrics": "",
-        "score": "",
+        "lyrics": "지존하신 주님 이름 앞에\n모두 무릎 꿇고 다 경배해\n거룩하신 주님 보좌 앞에\n엎드려 절하세\n예수는 그리스도 예수는 주\n하나님의 영으로 경배드리리",
+        "score": "https://postfiles.pstatic.net/data44/2009/3/8/193/525_rawonjae.jpg?type=w3",
         "youtube": ""
       },
       {
         "type": "call",
         "title": "예배로 부름",
         "leader": "집례자",
-        "content": "시편 100편 1-2절"
+        "content": "요한복음 1:12-13"
       },
       {
         "type": "hymn",
         "title": "경배의 찬송",
-        "number": "",
-        "hymnTitle": "",
-        "lyrics": "",
-        "score": "",
+        "number": "32",
+        "hymnTitle": "만유의 주",
+        "lyrics": "1. 만유의 주재 존귀하신 예수\n사람이 되신 하나님\n나 사모하여 영원히 섬길\n내 영광되신 주로다\n\n2. 화려한 동산 무성한 저 수목\n다 아름답고 묘하나\n순전한 예수 더 아름다워\n봄 같은 기쁨 주시네\n\n3. 광명한 해와 명랑한 저 달빛\n수많은 별들 빛나나\n주 예수 빛은 더 찬란하여\n참 비교할 수 없도다. 아멘",
+        "score": "https://hymn.hanoon.app/369e1686-86d3-4ed4-84ce-921709712c7e",
         "youtube": ""
       },
       {
         "type": "responsive",
         "title": "성시교독",
-        "reference": "",
+        "reference": "15. 시편 27편",
         "leaderLabel": "집례자",
         "congregationLabel": "회중",
         "lines": [
-          { "role": "leader", "text": "" },
-          { "role": "congregation", "text": "" }
+          {
+            "role": "leader",
+            "text": ""
+          },
+          {
+            "role": "congregation",
+            "text": ""
+          }
         ]
       },
       {
@@ -59,41 +65,44 @@
       {
         "type": "hymn",
         "title": "찬송",
-        "number": "370장",
-        "hymnTitle": "주 안에 있는 나에게",
-        "lyrics": "1. 주 안에 있는 나에게\n딴 근심 있으랴\n십자가 밑에 나아가\n죄 짐을 풀었네\n\n(후렴)\n이 세상에 근심 걱정 쌓였으나\n예수 안에 평안함을 늘 얻겠네\n주의 얼굴 뵈올 때에\n어찌 좋을까\n주의 손을 붙잡고서\n나 살아가리\n\n2. 그 두려움이 변하여\n내 기도 되었고\n전날의 한숨 변하여\n내 노래 되었네\n\n3. 내 주는 자비하셔서\n늘 함께 계시고\n내 궁핍함을 아시고\n늘 채워주시네",
-        "score": "",
+        "number": "527장",
+        "hymnTitle": "어서 돌아오",
+        "lyrics": "1. 어서 돌아오오\n어서 돌아만 오오\n지은 죄가 아무리\n무겁고 크기로\n주 어찌 못 담당하고\n못 받으시리요\n우리 주의 넓은 가슴은\n하늘보다 넓고 넓어\n\n2. 어서 돌아오오\n어서 돌아만 오오\n우리 주는 날마다\n기다리신다오\n밤마다 문 열어 놓고\n마음 졸이시며\n나간 자식 돌아오기만\n밤새 기다리신다오\n\n3. 어서 돌아오오\n어서 돌아만 오오\n채찍 맞아 아파도\n주님의 손으로\n때리시고 어루만져\n위로해 주시는\n우리 주의 넓은 품으로\n어서 돌아오오 어서",
+        "score": "https://hymn.hanoon.app/7c8a518d-1158-46ac-a529-a10e8eba6d41",
         "youtube": ""
       },
       {
         "type": "prayer",
         "title": "대표기도",
-        "leader": "○○○"
+        "leader": "조종숙 권사"
       },
       {
         "type": "scripture",
         "title": "성경 봉독",
-        "reference": "마태복음 6:25-34",
-        "text": "25 그러므로 내가 너희에게 이르노니 목숨을 위하여 무엇을 먹을까 무엇을 마실까 몸을 위하여 무엇을 입을까 염려하지 말라 목숨이 음식보다 중하지 아니하며 몸이 의복보다 중하지 아니하냐\n\n26 공중의 새를 보라 심지도 않고 거두지도 않고 창고에 모아들이지도 아니하되 너희 하늘 아버지께서 기르시나니 너희는 이것들보다 귀하지 아니하냐\n\n27 너희 중에 누가 염려함으로 그 키를 한 자라도 더할 수 있느냐\n\n28 또 너희가 어찌 의복을 위하여 염려하느냐 들의 백합화가 어떻게 자라는가 생각하여 보라 수고도 아니하고 길쌈도 아니하느니라\n\n29 그러나 내가 너희에게 말하노니 솔로몬의 모든 영광으로도 입은 것이 이 꽃 하나만 같지 못하였느니라\n\n30 오늘 있다가 내일 아궁이에 던져지는 들풀도 하나님이 이렇게 입히시거든 하물며 너희일까보냐 믿음이 작은 자들아\n\n31 그러므로 염려하여 이르기를 무엇을 먹을까 무엇을 마실까 무엇을 입을까 하지 말라\n\n32 이는 다 이방인들이 구하는 것이라 너희 하늘 아버지께서 이 모든 것이 너희에게 있어야 할 줄을 아시느니라\n\n33 그런즉 너희는 먼저 그의 나라와 그의 의를 구하라 그리하면 이 모든 것을 너희에게 더하시리라\n\n34 그러므로 내일 일을 위하여 염려하지 말라 내일 일은 내일이 염려할 것이요 한 날의 괴로움은 그 날로 족하니라"
+        "reference": "이사야 30:18",
+        "text": "그러나 여호와께서 기다리시나니 이는 너희에게 은혜를 베풀려 하심이요 일어나시리니 이는 너희를 긍휼히 여기려 하심이라 대저 여호와는 정의의 하나님이심이라 그를 기다리는 자마다 복이 있도다"
       },
       {
         "type": "sermon",
         "title": "말씀 선포",
-        "content": "먼저 그의 나라를 구하라"
+        "content": "기다리시는 하나님, 기다리는 우리",
+        "preacher": "채수호 목사",
+        "scripture": ""
       },
       {
         "type": "hymn",
         "title": "응답찬송",
-        "number": "새 449장",
-        "hymnTitle": "예수 따라가며",
-        "lyrics": "1. 예수 따라가며 복음 순종하면\n우리 행할 길 환하겠네\n주를 의지하며 순종하는 자에게\n주가 복을 내리시리라\n\n(후렴)\n의지하고 순종하는 길은\n예수 안에 즐겁게 사는 길이니\n의지하고 순종하라",
-        "score": "",
+        "number": "526장",
+        "hymnTitle": "목마른 자들아",
+        "lyrics": "1. 목마른 자들아 다 이리 오라\n이곳에 좋은 샘 흐르도다\n힘쓰고 애씀이 없을지라도\n이 샘에 오면 다 마시겠네\n\n2. 이 샘에 솟는 물 강같이 흘러\n온 천하만국에 다 통하네\n빈부나 귀천에 분별이 없이\n다 와서 쉬고 또 마시겠네\n\n3. 생명수 샘물을 마신 자마다\n목 다시 마르지 아니하고\n속에서 솟아나 생수가 되어\n영원히 솟아 늘 풍성하리\n\n4. 이 샘의 이름은 생명의 샘물\n저 수정 빛같이 늘 맑도다\n어린 양 보좌가 근원이 되어\n생명수 샘이 늘 그치잖네",
+        "score": "https://postfiles.pstatic.net/MjAyMDA4MjZfMjAw/MDAxNTk4NDI5NjQzNTI2.Oje3CE6IQjCn7VSEn-NRMMDFoXMPysSuklSBtENIBHgg.qubmOGtfYDaZuAaGkXxXOc0HQQocBK6exTD3xcRCKYIg.JPEG.bansuk-153/526-%EB%AA%A9%EB%A7%88%EB%A5%B8%EC%9E%90%EB%93%A4%EC%95%84(C).jpg?type=w773",
         "youtube": ""
       },
       {
         "type": "offering",
         "title": "봉헌 및 기도",
-        "content": "십일조·감사·주정헌금"
+        "content": "십일조·감사·주정헌금",
+        "leader": ""
       },
       {
         "type": "notice",
@@ -103,10 +112,10 @@
       {
         "type": "hymn",
         "title": "파송찬양",
-        "number": "",
+        "number": "마라나타",
         "hymnTitle": "일어서서",
-        "lyrics": "",
-        "score": "",
+        "lyrics": "마라나타 주 예수여\n어서 오시옵소서\n땅의 모든 끝 모든 족속\n주를 찬송하게 하소서\n\n마라나타 주 예수여\n어서 오시옵소서\n모든 열방이 주께 돌아와 \n춤추며 경배하게 하소서\n\n우리 주님 다시 오실 길을 만들자\n십자가를 들고 땅끝까지 우린 가리라\n우리 주님 하늘 영광 온 땅 덮을 때\n우린 땅끝에서 주를 맞으리\n\n마라나타 마라나타 \n아멘 주 예수여 오시옵소서\n\n마라나타 마라나타 \n아멘 주 예수여 오시옵소서",
+        "score": "https://postfiles.pstatic.net/MjAyMzEyMTVfNDUg/MDAxNzAyNjM2ODU3MTkx.vmwioKJ8PzdZagpwgUTVeysmXv3tOfBqwNE-z_IX6ccg.Ir0cZR_84IfEyv2QaEQ0ih0XgEOJLmTUruXrgMMO9xcg.JPEG.hosannajeonwon/KakaoTalk_20231203_151931064_03.jpg?type=w3840",
         "youtube": ""
       },
       {
@@ -115,23 +124,30 @@
         "leaderLabel": "집례",
         "congregationLabel": "회중",
         "lines": [
-          { "role": "leader", "text": "주의 은혜가 여러분에게 임하였으니 세상에 나가 소금과 빛의 사명을 감당하십시오." },
-          { "role": "congregation", "text": "우리가 주와 함께 가겠나이다." }
+          {
+            "role": "leader",
+            "text": "주의 은혜가 여러분에게 임하였으니 세상에 나가 소금과 빛의 사명을 감당하십시오."
+          },
+          {
+            "role": "congregation",
+            "text": "우리가 주와 함께 가겠나이다."
+          }
         ]
       },
       {
         "type": "benediction",
         "title": "강복선언",
-        "leader": "채수호"
+        "leader": "채수호 목사"
       }
     ]
   },
   "news": [
     {
-      "category": "다음 주 예배 안내",
+      "category": "교회 소식",
       "items": [
-        "다음 주일(9월 20일) 예배에 함께 은혜받으시길 바랍니다.",
-        "오후예배는 오후 2시에 드립니다."
+        "수요길거리 전도에 많은 참여와 기도 바랍니다.",
+        "17일(목) 교역자회의가 있습니다.",
+        "다음 주 교회 봉사는 \"사랑조\"(박미자 권사)입니다."
       ]
     },
     {
@@ -141,7 +157,7 @@
     {
       "category": "주중 모임",
       "items": [
-        "수요기도회 - 매주 수요일 저녁 7시 30분",
+        "수요",
         "새벽기도회 - 화-토 새벽 5시 30분",
         "금요철야 - 매주 금요일 밤 9시"
       ]
