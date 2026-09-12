@@ -957,22 +957,16 @@
     openModal(item.title || '성경 봉독', html);
   }
 
-  function renderSermon(item, sermon) {
+  function renderSermon(item) {
     const html = `
-      <div class="sermon-title">${esc(sermon.title || item.content || '')}</div>
-      <div class="sermon-preacher">${esc(sermon.preacher || '')}</div>
-      ${sermon.scripture ? `
+      <div class="sermon-title">${esc(item.content || item.title || '말씀 선포')}</div>
+      ${item.preacher ? `<div class="sermon-preacher">${esc(item.preacher)}</div>` : ''}
+      ${item.scripture ? `
         <div class="sermon-scripture-label">본문</div>
-        <div class="sermon-scripture-ref">${esc(sermon.scripture)}</div>
-      ` : ''}
-      ${(sermon.outline && sermon.outline.length) ? `
-        <div class="outline-label">설교 요절</div>
-        <ol class="outline-list">
-          ${sermon.outline.map(o => `<li>${esc(o)}</li>`).join('')}
-        </ol>
+        <div class="sermon-scripture-ref">${esc(item.scripture)}</div>
       ` : ''}
     `;
-    openModal('말씀 선포', html);
+    openModal(item.title || '말씀 선포', html);
   }
 
   function renderResponsive(item) {
@@ -1139,7 +1133,7 @@
         btn.addEventListener('click', () => {
           if (item.type === 'hymn') renderHymn(item);
           else if (item.type === 'scripture') renderScripture(item);
-          else if (item.type === 'sermon') renderSermon(item, data.service.sermon || {});
+          else if (item.type === 'sermon') renderSermon(item);
           else if (item.type === 'notice') renderNews(data.news || []);
           else if (item.type === 'praise') renderPraise(item);
           else if (item.type === 'responsive') renderResponsive(item);

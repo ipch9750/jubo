@@ -392,21 +392,6 @@
       <div class="field"><label>날짜</label><input type="text" id="serviceDate" placeholder="예: 2026년 9월 13일 주일"></div>
     </div>
     <div class="field"><label>시간</label><input type="text" id="serviceTime" placeholder="예: 오전 11시"></div>
-    <div class="field"><label>오늘의 말씀 본문</label><textarea id="verseText"></textarea></div>
-    <div class="field"><label>오늘의 말씀 출처</label><input type="text" id="verseRef" placeholder="예: 마태복음 6:33"></div>
-  </div>
-
-  <!-- Sermon -->
-  <div class="section">
-    <div class="section-header">📖 설교</div>
-    <div class="field"><label>설교 제목</label><input type="text" id="sermonTitle"></div>
-    <div class="field-row">
-      <div class="field"><label>설교자</label><input type="text" id="sermonPreacher"></div>
-      <div class="field"><label>본문</label><input type="text" id="sermonScripture" placeholder="예: 마태복음 6:25-34"></div>
-    </div>
-    <div class="field"><label>설교 요절 (한 줄에 한 항목)</label>
-      <textarea id="sermonOutline" placeholder="첫 번째 요절&#10;두 번째 요절&#10;세 번째 요절"></textarea>
-    </div>
   </div>
 
   <!-- Order -->
@@ -508,12 +493,6 @@
     document.getElementById('serviceType').value = s.service.type || '주일오전예배';
     document.getElementById('serviceDate').value = s.service.date || '';
     document.getElementById('serviceTime').value = s.service.time || '';
-    document.getElementById('verseText').value = s.service.verse?.text || '';
-    document.getElementById('verseRef').value = s.service.verse?.reference || '';
-    document.getElementById('sermonTitle').value = s.service.sermon?.title || '';
-    document.getElementById('sermonPreacher').value = s.service.sermon?.preacher || '';
-    document.getElementById('sermonScripture').value = s.service.sermon?.scripture || '';
-    document.getElementById('sermonOutline').value = (s.service.sermon?.outline || []).join('\n');
     renderOrder();
     renderNews();
   }
@@ -550,7 +529,13 @@
     } else if (item.type === 'prayer' || item.type === 'benediction') {
       extraFields = `<div class="field"><label>인도자</label><input type="text" data-k="leader" value="${escAttr(item.leader)}"></div>`;
     } else if (item.type === 'sermon') {
-      extraFields = `<div class="field"><label>설교 제목</label><input type="text" data-k="content" value="${escAttr(item.content)}"></div>`;
+      extraFields = `
+        <div class="field"><label>설교 제목</label><input type="text" data-k="content" value="${escAttr(item.content)}"></div>
+        <div class="field-row">
+          <div class="field"><label>설교자 (선택)</label><input type="text" data-k="preacher" value="${escAttr(item.preacher)}"></div>
+          <div class="field"><label>본문 (선택)</label><input type="text" data-k="scripture" value="${escAttr(item.scripture)}" placeholder="예: 마태복음 6:25-34"></div>
+        </div>
+      `;
     } else if (item.type === 'call' || item.type === 'offering') {
       extraFields = `
         <div class="field"><label>인도자 (선택)</label><input type="text" data-k="leader" value="${escAttr(item.leader)}"></div>
@@ -750,15 +735,9 @@
     state.service.type = document.getElementById('serviceType').value;
     state.service.date = document.getElementById('serviceDate').value;
     state.service.time = document.getElementById('serviceTime').value;
-    if (!state.service.verse) state.service.verse = {};
-    state.service.verse.text = document.getElementById('verseText').value;
-    state.service.verse.reference = document.getElementById('verseRef').value;
-    if (!state.service.sermon) state.service.sermon = {};
-    state.service.sermon.title = document.getElementById('sermonTitle').value;
-    state.service.sermon.preacher = document.getElementById('sermonPreacher').value;
-    state.service.sermon.scripture = document.getElementById('sermonScripture').value;
-    state.service.sermon.outline = document.getElementById('sermonOutline').value
-      .split('\n').map(s => s.trim()).filter(Boolean);
+    // verse/sermon 최상위 블록은 더 이상 사용하지 않으므로 남아있으면 제거
+    delete state.service.verse;
+    delete state.service.sermon;
 
     // Order items
     document.querySelectorAll('#orderContainer .order-item').forEach((el, idx) => {
