@@ -382,12 +382,46 @@
       <div class="field">
         <label>예배 구분</label>
         <select id="serviceType">
-          <option>주일오전예배</option>
-          <option>주일오후예배</option>
-          <option>수요기도회</option>
-          <option>새벽기도회</option>
-          <option>금요철야</option>
+          <optgroup label="정기 예배">
+            <option>주일오전예배</option>
+            <option>주일오후예배</option>
+            <option>수요기도회</option>
+            <option>새벽기도회</option>
+            <option>금요철야</option>
+          </optgroup>
+          <optgroup label="장례 관련">
+            <option>추도예배</option>
+            <option>임종예배</option>
+            <option>입관예배</option>
+            <option>발인(고별)예배</option>
+            <option>화장예배</option>
+            <option>안장예배</option>
+            <option>위로예배</option>
+          </optgroup>
+          <optgroup label="경사 예배">
+            <option>결혼예배</option>
+            <option>임직예배</option>
+          </optgroup>
+          <optgroup label="절기 예배">
+            <option>송구영신예배</option>
+            <option>신년감사예배</option>
+            <option>추석가정예배</option>
+            <option>설날가정예배</option>
+            <option>성탄절예배</option>
+            <option>부활절예배</option>
+            <option>맥추감사예배</option>
+            <option>추수감사예배</option>
+          </optgroup>
+          <optgroup label="심방 예배">
+            <option>심방예배</option>
+            <option>개업예배</option>
+            <option>입주예배</option>
+            <option>이사심방예배</option>
+          </optgroup>
+          <option value="__custom__">✏ 직접입력 (그 외 상황용)</option>
         </select>
+        <input type="text" id="serviceTypeCustom" placeholder="예: 한가위가정예배"
+               style="display:none; margin-top:8px;">
       </div>
       <div class="field"><label>날짜</label><input type="text" id="serviceDate" placeholder="예: 2026년 9월 13일 주일"></div>
     </div>
@@ -456,6 +490,49 @@
 
   let state = null;
 
+  // 예배 구분: 드롭다운 값이 목록에 없으면 '직접입력'으로 처리해 입력창을 노출
+  function setServiceType(value) {
+    const sel = document.getElementById('serviceType');
+    const custom = document.getElementById('serviceTypeCustom');
+    const v = String(value || '').trim();
+    // 목록에 포함된 값인지 확인 (optgroup 안의 실제 option들만 스캔)
+    const options = Array.from(sel.querySelectorAll('optgroup > option')).map(o => o.value || o.text);
+    if (v && options.includes(v)) {
+      sel.value = v;
+      custom.style.display = 'none';
+      custom.value = '';
+    } else {
+      sel.value = '__custom__';
+      custom.style.display = '';
+      custom.value = v;
+    }
+  }
+
+  function getServiceType() {
+    const sel = document.getElementById('serviceType');
+    const custom = document.getElementById('serviceTypeCustom');
+    if (sel.value === '__custom__') {
+      return (custom.value || '').trim() || '주일오전예배';
+    }
+    return sel.value;
+  }
+
+  // 드롭다운에서 '직접입력' 선택 시 입력창 표시, 다른 값 선택 시 숨김
+  document.addEventListener('DOMContentLoaded', () => {
+    const sel = document.getElementById('serviceType');
+    const custom = document.getElementById('serviceTypeCustom');
+    if (!sel || !custom) return;
+    sel.addEventListener('change', () => {
+      if (sel.value === '__custom__') {
+        custom.style.display = '';
+        custom.focus();
+      } else {
+        custom.style.display = 'none';
+        custom.value = '';
+      }
+    });
+  });
+
   function toast(msg, isError) {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -490,7 +567,7 @@
     document.getElementById('bank').value = s.church.account.bank || '';
     document.getElementById('accountNum').value = s.church.account.number || '';
     document.getElementById('holder').value = s.church.account.holder || '';
-    document.getElementById('serviceType').value = s.service.type || '주일오전예배';
+    setServiceType(s.service.type || '주일오전예배');
     document.getElementById('serviceDate').value = s.service.date || '';
     document.getElementById('serviceTime').value = s.service.time || '';
     renderOrder();
@@ -732,7 +809,7 @@
     state.church.account.bank = document.getElementById('bank').value;
     state.church.account.number = document.getElementById('accountNum').value;
     state.church.account.holder = document.getElementById('holder').value;
-    state.service.type = document.getElementById('serviceType').value;
+    state.service.type = getServiceType();
     state.service.date = document.getElementById('serviceDate').value;
     state.service.time = document.getElementById('serviceTime').value;
     // verse/sermon 최상위 블록은 더 이상 사용하지 않으므로 남아있으면 제거
@@ -870,6 +947,7 @@
 
   init();
 </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
