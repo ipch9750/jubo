@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>첫 화면 설정 · 인평교회</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #FAF6EE; --ivory-2: #F3ECDC; --navy: #1B2A4E; --gold: #B08A3E;
+    --ink: #2A2620; --ink-mute: #6B655A; --line: #E5DCC6; --card: #fff;
+    --danger: #B23A3A; --success: #2E7D4F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: var(--ivory); color: var(--ink); line-height: 1.6; padding-bottom: 120px; }
+  .topbar { background: var(--navy); color: #fff; position: sticky; top: 0; z-index: 10; }
+  .topbar-inner { max-width: 720px; margin: 0 auto; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .topbar h1 { font-family: 'Noto Serif KR', serif; font-size: 1.15rem; }
+  .topbar a { color: #D4B26A; text-decoration: none; font-size: 0.95rem; }
+  .container { max-width: 720px; margin: 0 auto; padding: 18px; }
+  .help { background: #FFF8E6; border: 1px solid #EBD9A8; border-radius: 12px; padding: 14px 16px; font-size: 0.92rem; margin-bottom: 18px; }
+  .section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .section-header { font-family: 'Noto Serif KR', serif; font-size: 1.08rem; color: var(--navy); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 0.86rem; color: var(--ink-mute); margin-bottom: 4px; font-weight: 500; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  input[type=text], textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; font-family: inherit; font-size: 1rem; background: #fff; color: var(--ink); }
+  input[type=text]:focus, textarea:focus { outline: none; border-color: var(--navy); }
+  textarea { min-height: 90px; resize: vertical; }
+  .hint { font-size: 0.82rem; color: var(--ink-mute); margin-top: 4px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 11px 16px; border-radius: 10px; border: 1px solid var(--line); background: #fff; color: var(--navy); font-family: inherit; font-size: 0.95rem; font-weight: 500; cursor: pointer; text-decoration: none; min-height: 44px; }
+  .btn.small { padding: 8px 12px; font-size: 0.88rem; min-height: 38px; }
+  .btn.primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .btn.gold { background: var(--gold); color: #fff; border-color: var(--gold); }
+  .btn-icon { width: 38px; height: 38px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-size: 0.95rem; flex-shrink: 0; }
+  .btn-icon.danger { color: var(--danger); }
+  .row-item { border: 1px solid var(--line); background: var(--ivory); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: flex; gap: 8px; align-items: flex-start; }
+  .row-item .grow { flex: 1; display: grid; gap: 6px; }
+  .row-item .grow.two { grid-template-columns: 1fr 1.6fr; }
+  .tile-row { display: grid; grid-template-columns: 1fr 1.4fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .chk { display: flex; align-items: center; gap: 6px; font-size: 0.88rem; color: var(--ink-mute); white-space: nowrap; }
+  .chk input { width: 20px; height: 20px; }
+  .photo-pick { display: flex; gap: 14px; align-items: center; }
+  .photo-prev { width: 76px; height: 76px; border-radius: 50%; background: var(--ivory-2); overflow: hidden; display: grid; place-items: center; color: var(--ink-mute); font-size: 0.75rem; flex-shrink: 0; border: 1px solid var(--line); }
+  .photo-prev img { width: 100%; height: 100%; object-fit: cover; }
+  .thumb { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; background: var(--ivory-2); flex-shrink: 0; }
+  .action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.97); border-top: 1px solid var(--line); z-index: 10; }
+  .action-bar-inner { max-width: 720px; margin: 0 auto; padding: 10px 14px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%) translateY(20px); background: var(--success); color: #fff; padding: 12px 20px; border-radius: 10px; opacity: 0; transition: .25s; pointer-events: none; z-index: 30; font-size: 0.95rem; max-width: 90vw; text-align: center; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @media (max-width: 520px) { .field-row, .row-item .grow.two { grid-template-columns: 1fr; } .tile-row { grid-template-columns: 1fr 1fr; } .tile-row .chk { grid-column: span 2; } }
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="topbar-inner">
+  <h1>⚙️ 첫 화면 설정</h1>
+  <div style="display:flex;gap:14px"><a href="edit.html">주보 편집</a><a href="home.html">← 첫 화면</a></div>
+</div></div>
+
+<div class="container">
+  <div class="help">
+    <strong>사용법:</strong> 내용을 고친 뒤 <strong>[💾 브라우저 저장]</strong>을 누르면 이 휴대폰(컴퓨터)의 첫 화면에 바로 보입니다.
+    성도님들께 보이게 하시려면 <strong>[📥 home.json 다운로드]</strong>로 받은 파일을 깃허브 <code>data</code> 폴더 안에 올려 주세요.<br>
+    <span style="color:var(--ink-mute)">※ “이번 주 말씀”과 “교회소식”은 주보 편집기에서 쓰신 내용을 자동으로 가져옵니다.</span>
+  </div>
+
+  <!-- 교회 프로필 -->
+  <div class="section">
+    <div class="section-header">⛪ 교회 프로필</div>
+    <div class="field">
+      <label>교회 프로필 사진</label>
+      <div class="photo-pick">
+        <div class="photo-prev" id="photoPrev">사진 없음</div>
+        <div style="display:grid;gap:6px">
+          <label class="btn small">📷 사진 고르기<input type="file" id="photoFile" accept="image/*" style="display:none"></label>
+          <button class="btn small" id="photoClear" type="button">사진 지우기</button>
+        </div>
+      </div>
+      <div class="hint">고르신 사진은 작게 줄여서 저장됩니다. (또는 깃허브에 올린 사진 주소를 아래에 직접 적으셔도 됩니다)</div>
+      <input type="text" id="photoUrl" placeholder="예: images/church.jpg" style="margin-top:6px">
+    </div>
+    <div class="field"><label>교회 이름</label><input type="text" data-p="church.name"></div>
+    <div class="field-row">
+      <div class="field"><label>표어 제목</label><input type="text" data-p="church.mottoLabel" placeholder="예: 2026년 표어"></div>
+      <div class="field"><label>표어</label><input type="text" data-p="church.motto" placeholder="예: 할 말 있게 하시는 하나님"></div>
+    </div>
+    <div class="field"><label>표어 성경 구절 (선택 — 비워두면 표시 안 함)</label><input type="text" data-p="church.mottoVerse" placeholder="예: 출 4:12"></div>
+  </div>
+
+  <!-- 이번 주 말씀 -->
+  <div class="section">
+    <div class="section-header">📖 이번 주 말씀</div>
+    <div class="field"><label class="chk" style="font-size:0.95rem;color:var(--ink)"><input type="checkbox" id="wordAuto"> 주보에서 자동으로 가져오기 (설교 제목 · 성경 봉독 · 설교자)</label></div>
+    <div id="wordManual">
+      <div class="field"><label>설교 제목</label><input type="text" data-p="word.title"></div>
+      <div class="field-row">
+        <div class="field"><label>성경 본문</label><input type="text" data-p="word.reference" placeholder="예: 시편 49:7-8"></div>
+        <div class="field"><label>설교자</label><input type="text" data-p="word.preacher"></div>
+      </div>
+      <div class="field"><label>예배 이름</label><input type="text" data-p="word.serviceType" placeholder="예: 주일오전예배"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>카드 이름</label><input type="text" data-p="word.label"></div>
+      <div class="field"><label>버튼 글자</label><input type="text" data-p="word.button"></div>
+    </div>
+  </div>
+
+  <!-- 메뉴 칸 -->
+  <div class="section">
+    <div class="section-header">🔲 첫 화면 메뉴 칸 (이름 · 설명 · 보이기)</div>
+    <div id="tilesEditor"></div>
+  </div>
+
+  <!-- 교회소개 -->
+  <div class="section">
+    <div class="section-header">😊 교회소개</div>
+    <div class="field"><label>소개 글</label><textarea data-p="intro.text" style="min-height:120px"></textarea></div>
+    <div class="field"><label>섬기는 분들</label><div id="staffList"></div><button class="btn small" data-add="staff">＋ 추가</button></div>
+    <div class="field"><label>예배 안내</label><div id="worshipList"></div><button class="btn small" data-add="worship">＋ 추가</button></div>
+    <div class="field"><label>주소</label><input type="text" data-p="intro.address"></div>
+    <div class="field"><label>전화</label><input type="text" data-p="intro.phone"></div>
+  </div>
+
+  <!-- 교회일정 -->
+  <div class="section">
+    <div class="section-header">📅 교회일정</div>
+    <div class="field"><label>일정 제목</label><input type="text" data-p="schedule.title" placeholder="예: 11월 일정"></div>
+    <div id="scheduleList"></div>
+    <button class="btn small" data-add="schedule">＋ 일정 추가</button>
+  </div>
+
+  <!-- 교회사진 -->
+  <div class="section">
+    <div class="section-header">🖼️ 교회사진</div>
+    <div class="hint" style="margin-bottom:10px">사진을 고르면 작게 줄여 저장합니다. 사진이 많으면 파일이 커지니, 많을 때는 깃허브 <code>images</code> 폴더에 올리고 주소(예: images/photo1.jpg)를 적어 주세요.</div>
+    <div id="photoList"></div>
+    <label class="btn small">📷 사진 추가<input type="file" id="galleryFile" accept="image/*" multiple style="display:none"></label>
+    <button class="btn small" data-add="photoUrl">＋ 주소로 추가</button>
+  </div>
+
+  <!-- 칼럼 -->
+  <div class="section">
+    <div class="section-header">📰 교회소식 · 칼럼</div>
+    <div class="hint" style="margin-bottom:10px">“소식”은 주보 편집기의 교회 소식을 그대로 보여 줍니다. 여기서는 목회 칼럼만 쓰시면 됩니다.</div>
+    <div id="columnList"></div>
+    <button class="btn small" data-add="column">＋ 칼럼 추가</button>
+  </div>
+
+  <!-- 나눔 -->
+  <div class="section">
+    <div class="section-header">💛 나눔</div>
+    <div class="field"><label>화면 제목</label><input type="text" data-p="share.title"></div>
+    <div class="field"><label>안내 문구</label><input type="text" data-p="share.intro"></div>
+    <div id="shareList"></div>
+    <button class="btn small" data-add="share">＋ 나눔 글 추가</button>
+  </div>
+
+  <!-- 하단 메뉴 -->
+  <div class="section">
+    <div class="section-header">📱 하단 메뉴 이름</div>
+    <div class="field-row">
+      <div class="field"><label>첫째 (교회)</label><input type="text" data-p="nav.church"></div>
+      <div class="field"><label>둘째 (주보)</label><input type="text" data-p="nav.bulletin"></div>
+      <div class="field"><label>셋째 (나눔)</label><input type="text" data-p="nav.share"></div>
+      <div class="field"><label>넷째 (더보기)</label><input type="text" data-p="nav.more"></div>
+    </div>
+  </div>
+
+  <!-- 더보기 -->
+  <div class="section">
+    <div class="section-header">⚙️ 더보기</div>
+    <div class="field"><label class="chk" style="font-size:0.95rem;color:var(--ink)"><input type="checkbox" id="showAccount"> 헌금 계좌 보이기 (주보 편집기의 계좌 정보 사용)</label></div>
+    <div class="field"><label>바로가기 목록</label><div id="linkList"></div><button class="btn small" data-add="link">＋ 바로가기 추가</button></div>
+  </div>
+</div>
+
+<div class="action-bar"><div class="action-bar-inner">
+  <a class="btn" href="home.html" target="_blank">👁 미리보기</a>
+  <button class="btn primary" id="saveBtn">💾 브라우저 저장</button>
+  <button class="btn gold" id="downloadBtn">📥 home.json 다운로드</button>
+  <label class="btn">📤 불러오기<input type="file" id="uploadInput" accept=".json,application/json" style="display:none"></label>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const DRAFT_KEY = 'inpyeong-home-draft';
+  const TILE_KEYS = [['intro','교회소개'],['schedule','교회일정'],['photos','교회사진'],['news','교회소식']];
+  // 목록 편집기 정의: [상태 경로, 칸들]
+  const LISTS = {
+    staff:    { path: 'intro.staff',    el: 'staffList',    fields: [['role','직분 (예: 담임목사)'],['name','이름']], two: true },
+    worship:  { path: 'intro.worship',  el: 'worshipList',  fields: [['name','예배 이름'],['time','시간']], two: true },
+    schedule: { path: 'schedule.items', el: 'scheduleList', fields: [['date','날짜 (예: 11월 1일 (주일))'],['text','내용']], two: true },
+    column:   { path: 'columns',        el: 'columnList',   fields: [['date','날짜'],['title','제목'],['text','내용','area']] },
+    share:    { path: 'share.items',    el: 'shareList',    fields: [['date','날짜'],['title','제목'],['text','내용','area']] },
+    link:     { path: 'more.links',     el: 'linkList',     fields: [['title','이름'],['url','주소 (예: archive.html)']], two: true },
+    photo:    { path: 'photos',         el: 'photoList',    fields: [['caption','사진 설명'],['src','사진 주소']], thumb: true }
+  };
+
+  let state = null;
+  const $ = id => document.getElementById(id);
+  const escA = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+  const get = (o, p) => p.split('.').reduce((a, k) => (a == null ? undefined : a[k]), o);
+  const set = (o, p, v) => { const ks = p.split('.'); let a = o; ks.slice(0,-1).forEach(k => { if (typeof a[k] !== 'object' || a[k] === null) a[k] = {}; a = a[k]; }); a[ks[ks.length-1]] = v; };
+
+  function toast(msg, err) { const t = $('toast'); t.textContent = msg; t.style.background = err ? 'var(--danger)' : 'var(--success)'; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+
+  async function init() {
+    let draft = null, server = null;
+    try { const d = localStorage.getItem(DRAFT_KEY); if (d) draft = JSON.parse(d); } catch(e) {}
+    try { const r = await fetch('data/home.json?t=' + Date.now(), { cache: 'no-store' }); if (r.ok) server = await r.json(); } catch(e) {}
+    const stamp = s => String((s && s.meta && (s.meta.savedAt || s.meta.updatedAt)) || '');
+    if (draft && server) {
+      const draftNewer = draft.meta && draft.meta.savedAt && stamp(draft) >= stamp(server);
+      state = draftNewer ? draft : server;
+      if (!draftNewer) toast('깃허브에 올린 최신 설정을 불러왔습니다.');
+    } else state = draft || server;
+    if (!state) { state = {}; toast('home.json 파일이 없어 빈 설정으로 시작합니다.', true); }
+    fill();
+  }
+
+  function fill() {
+    document.querySelectorAll('[data-p]').forEach(i => { const v = get(state, i.dataset.p); i.value = v == null ? '' : v; });
+    $('wordAuto').checked = get(state, 'word.auto') !== false;
+    $('showAccount').checked = get(state, 'more.showAccount') !== false;
+    toggleManual();
+    renderPhoto();
+    renderTiles();
+    Object.keys(LISTS).forEach(renderList);
+  }
+
+  function renderPhoto() {
+    const src = get(state, 'church.photo') || '';
+    $('photoPrev').innerHTML = src ? `<img src="${escA(src)}" alt="">` : '사진 없음';
+    $('photoUrl').value = src.startsWith('data:') ? '' : src;
+  }
+
+  function renderTiles() {
+    $('tilesEditor').innerHTML = TILE_KEYS.map(([k, def]) => {
+      const t = get(state, 'tiles.' + k) || {};
+      return `<div class="tile-row" data-tile="${k}">
+        <input type="text" data-tk="title" value="${escA(t.title || def)}" placeholder="이름">
+        <input type="text" data-tk="sub" value="${escA(t.sub)}" placeholder="설명">
+        <label class="chk"><input type="checkbox" data-tk="show" ${t.show !== false ? 'checked' : ''}> 보이기</label>
+      </div>`;
+    }).join('');
+  }
+
+  function renderList(key) {
+    const L = LISTS[key];
+    const arr = get(state, L.path) || [];
+    $(L.el).innerHTML = arr.map((it, i) => `
+      <div class="row-item" data-list="${key}" data-i="${i}">
+        ${L.thumb ? `<img class="thumb" src="${escA(it.src)}" alt="">` : ''}
+        <div class="grow ${L.two ? 'two' : ''}">
+          ${L.fields.map(([f, ph, kind]) => {
+            if (L.thumb && f === 'src' && String(it.src || '').startsWith('data:')) return `<input type="hidden" data-f="src" value="">`;
+            return kind === 'area'
+              ? `<textarea data-f="${f}" placeholder="${ph}">${escA(it[f])}</textarea>`
+              : `<input type="text" data-f="${f}" value="${escA(it[f])}" placeholder="${ph}">`;
+          }).join('')}
+        </div>
+        <div style="display:grid;gap:4px">
+          <button class="btn-icon" data-mv="-1" title="위로">↑</button>
+          <button class="btn-icon" data-mv="1" title="아래로">↓</button>
+          <button class="btn-icon danger" data-del title="삭제">🗑</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function collect() {
+    document.querySelectorAll('[data-p]').forEach(i => set(state, i.dataset.p, i.value));
+    set(state, 'word.auto', $('wordAuto').checked);
+    set(state, 'more.showAccount', $('showAccount').checked);
+    document.querySelectorAll('[data-tile]').forEach(r => {
+      const k = r.dataset.tile;
+      set(state, 'tiles.' + k, {
+        title: r.querySelector('[data-tk=title]').value,
+        sub: r.querySelector('[data-tk=sub]').value,
+        show: r.querySelector('[data-tk=show]').checked
+      });
+    });
+    Object.keys(LISTS).forEach(key => {
+      const L = LISTS[key];
+      const arr = get(state, L.path) || [];
+      document.querySelectorAll(`[data-list="${key}"]`).forEach(row => {
+        const it = arr[+row.dataset.i]; if (!it) return;
+        row.querySelectorAll('[data-f]').forEach(inp => {
+          if (inp.type === 'hidden') return; // 업로드한 사진 데이터는 그대로 유지
+          it[inp.dataset.f] = inp.value;
+        });
+      });
+      set(state, L.path, arr);
+    });
+  }
+
+  function toggleManual() { $('wordManual').style.display = $('wordAuto').checked ? 'none' : ''; }
+  $('wordAuto').addEventListener('change', toggleManual);
+
+  // 목록: 추가 / 이동 / 삭제
+  document.addEventListener('click', e => {
+    const add = e.target.closest('[data-add]');
+    if (add) {
+      collect();
+      let key = add.dataset.add;
+      if (key === 'photoUrl') key = 'photo';
+      const L = LISTS[key];
+      const arr = get(state, L.path) || [];
+      const blank = {}; L.fields.forEach(([f]) => blank[f] = '');
+      arr.push(blank); set(state, L.path, arr); renderList(key);
+      return;
+    }
+    const row = e.target.closest('.row-item');
+    if (!row) return;
+    const key = row.dataset.list, i = +row.dataset.i, L = LISTS[key];
+    if (e.target.closest('[data-del]')) {
+      collect(); const arr = get(state, L.path); arr.splice(i, 1); renderList(key);
+    } else if (e.target.closest('[data-mv]')) {
+      collect(); const arr = get(state, L.path); const j = i + (+e.target.closest('[data-mv]').dataset.mv);
+      if (j < 0 || j >= arr.length) return;
+      [arr[i], arr[j]] = [arr[j], arr[i]]; renderList(key);
+    }
+  });
+
+  // 사진 줄이기 (긴 변 기준)
+  function shrink(file, max, q) {
+    return new Promise((res, rej) => {
+      const img = new Image(); const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const r = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas'); c.width = Math.round(img.width * r); c.height = Math.round(img.height * r);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg', q));
+      };
+      img.onerror = rej; img.src = url;
+    });
+  }
+  $('photoFile').addEventListener('change', async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try { collect(); set(state, 'church.photo', await shrink(f, 320, 0.85)); renderPhoto(); toast('✓ 프로필 사진을 넣었습니다.'); }
+    catch(err) { toast('사진을 읽을 수 없습니다.', true); }
+    e.target.value = '';
+  });
+  $('photoUrl').addEventListener('change', () => { collect(); set(state, 'church.photo', $('photoUrl').value.trim()); renderPhoto(); });
+  $('photoClear').addEventListener('click', () => { collect(); set(state, 'church.photo', ''); renderPhoto(); });
+  $('galleryFile').addEventListener('change', async e => {
+    const files = Array.from(e.target.files || []); if (!files.length) return;
+    collect(); const arr = get(state, 'photos') || [];
+    for (const f of files) { try { arr.push({ caption: '', src: await shrink(f, 1000, 0.75) }); } catch(err) {} }
+    set(state, 'photos', arr); renderList('photo'); toast(`✓ 사진 ${files.length}장을 추가했습니다.`);
+    e.target.value = '';
+  });
+
+  function stampNow() {
+    state.meta = state.meta || {};
+    const d = new Date(), p = n => String(n).padStart(2, '0');
+    state.meta.savedAt = `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+    state.meta.updatedAt = state.meta.savedAt.slice(0, 10);
+  }
+
+  $('saveBtn').addEventListener('click', () => {
+    collect(); stampNow();
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); toast('✓ 저장했습니다. 첫 화면에서 확인하세요.'); }
+    catch(e) { toast('저장 공간이 부족합니다. 사진 수를 줄여 주세요.', true); }
+  });
+  $('downloadBtn').addEventListener('click', () => {
+    collect(); stampNow();
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'home.json'; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    toast('📥 home.json을 받았습니다. 깃허브 data 폴더에 올려 주세요.');
+  });
+  $('uploadInput').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { try { state = JSON.parse(r.result); fill(); toast('✓ 파일을 불러왔습니다.'); } catch(err) { toast('올바른 파일이 아닙니다.', true); } };
+    r.readAsText(f); e.target.value = '';
+  });
+
+  init();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

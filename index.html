@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#1B2A4E">
 <title>인평교회 주보</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,7 +48,7 @@
     line-height: 1.7;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
-    padding-bottom: 80px;
+    padding-bottom: calc(120px + env(safe-area-inset-bottom));
   }
   .app {
     max-width: 560px;
@@ -823,7 +826,18 @@
     color: var(--ink-mute);
   }
 
+  /* 하단 메뉴 (첫 화면과 동일) */
+  .tabbar { position: fixed; left: 0; right: 0; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 60; display: flex; justify-content: center; padding: 0 12px; pointer-events: none; }
+  .tabbar-inner { pointer-events: auto; width: 100%; max-width: 528px; background: rgba(255,255,255,0.96); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-radius: 999px; box-shadow: 0 6px 28px rgba(27,42,78,0.14); display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px; }
+  .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 9px 0 7px; border-radius: 999px; color: #6B655A; text-decoration: none; font-size: 13px; font-weight: 500; min-height: 56px; }
+  .tab svg { width: 24px; height: 24px; }
+  .tab.active { background: #F3E6CF; color: #8A6420; font-weight: 700; }
+  [data-theme="dark"] .tabbar-inner { background: rgba(31,35,46,0.96); }
+  [data-theme="dark"] .tab { color: #A69E8C; }
+  [data-theme="dark"] .tab.active { background: #2A2F3C; color: #D4B26A; }
+
   @media print {
+    .tabbar { display: none !important; }
     .fs-controls, .foot-links, .modal, .modal-backdrop { display: none !important; }
   }
 </style>
@@ -867,6 +881,26 @@
     <div class="foot-blessing">주님의 평강이 함께하시길 🙏</div>
   </footer>
 </div>
+
+
+<nav class="tabbar">
+  <div class="tabbar-inner">
+    <a class="tab" href="home.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M10 4h4"/><path d="M5 21V11l7-5 7 5v10"/><path d="M3 21h18"/><path d="M10 21v-4a2 2 0 0 1 4 0v4"/></svg><span data-nav="church">교회</span></a>
+    <a class="tab active" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg><span data-nav="bulletin">주보</span></a>
+    <a class="tab" href="home.html#share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg><span data-nav="share">나눔</span></a>
+    <a class="tab" href="home.html#more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg><span data-nav="more">더보기</span></a>
+  </div>
+</nav>
+<script>
+  // 하단 메뉴 이름을 첫 화면 설정과 맞춤
+  (async () => {
+    let h = null;
+    try { const d = localStorage.getItem('inpyeong-home-draft'); if (d) h = JSON.parse(d); } catch(e) {}
+    if (!h) { try { const r = await fetch('data/home.json?t=' + Date.now(), { cache: 'no-store' }); if (r.ok) h = await r.json(); } catch(e) {} }
+    const N = (h && h.nav) || {};
+    document.querySelectorAll('.tabbar [data-nav]').forEach(s => { if (N[s.dataset.nav]) s.textContent = N[s.dataset.nav]; });
+  })();
+</script>
 
 <!-- Modal -->
 <div class="modal-backdrop" id="backdrop"></div>
@@ -1163,17 +1197,21 @@
         if (found && found.data) return found.data;
       } catch(e) {}
     }
+    // 브라우저 초안과 깃허브 주보 중 '저장 시각이 더 최근인 것'을 보여줌
+    let draftState = null, serverState = null;
     const draft = localStorage.getItem('inpyeong-bulletin-draft');
-    if (draft) {
-      try { return JSON.parse(draft); } catch(e) {}
-    }
+    if (draft) { try { draftState = JSON.parse(draft); } catch(e) {} }
     try {
-      const res = await fetch('data/bulletin.json?t=' + Date.now());
-      return await res.json();
-    } catch(e) {
-      console.error('데이터 로드 실패:', e);
-      return null;
+      const res = await fetch('data/bulletin.json?t=' + Date.now(), { cache: 'no-store' });
+      serverState = await res.json();
+    } catch(e) { console.error('데이터 로드 실패:', e); }
+    const stamp = x => String((x && x.meta && (x.meta.savedAt || x.meta.updatedAt)) || '');
+    if (draftState && serverState) {
+      const draftNewer = draftState.meta && draftState.meta.savedAt && stamp(draftState) >= stamp(serverState);
+      if (!draftNewer) { try { localStorage.removeItem('inpyeong-bulletin-draft'); } catch(e) {} }
+      return draftNewer ? draftState : serverState;
     }
+    return draftState || serverState;
   }
 
   function summarize(item) {
@@ -1274,8 +1312,6 @@
   `;
   document.head.appendChild(s);
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
