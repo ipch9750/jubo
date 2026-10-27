@@ -559,6 +559,12 @@
     border-radius: 8px;
     border: 1px solid var(--line);
   }
+  .hymn-score a { display: block; }
+  .hymn-score-tip { margin-top: 8px; font-size: 0.85rem; color: var(--ink-mute); }
+  .hymn-score-empty {
+    padding: 48px 20px; text-align: center; color: var(--ink-mute);
+    background: var(--ivory-2); border-radius: 12px; font-size: 0.95rem;
+  }
   .hymn-score-placeholder {
     padding: 60px 20px;
     background: repeating-linear-gradient(
@@ -972,38 +978,20 @@
     return 'https://www.bskorea.or.kr/bible/korbibReadpage.php?version=GAE&book=mat&chap=6&sec=25&cVersion=GAE';
   }
 
+  // 찬송: 악보만 보여 줌 (가사는 표시하지 않음). 악보를 누르면 크게 볼 수 있음
   function renderHymn(item) {
-    const tabs = `
+    const html = `
       <div class="hymn-header">
         ${item.number ? `<div class="hymn-number">${esc(item.number)}</div>` : ''}
         <div class="hymn-title">${esc(item.hymnTitle || item.title)}</div>
       </div>
-      <div class="hymn-tabs">
-        <button class="hymn-tab active" data-tab="lyrics">가사</button>
-        <button class="hymn-tab" data-tab="score">악보</button>
-      </div>
-      <div class="hymn-content hymn-lyrics-wrap">
-        <div class="hymn-lyrics">${esc(item.lyrics || '가사가 준비되지 않았습니다.')}</div>
-      </div>
-      <div class="hymn-content hymn-score-wrap" style="display:none">
-        ${item.score
-          ? `<div class="hymn-score"><img src="${esc(item.score)}" alt="악보"></div>`
-          : `<div class="hymn-score-placeholder">
-              [악보 이미지 위치]<br><br>
-              편집 화면에서 악보 이미지<br>URL을 넣어주세요
-            </div>`}
-      </div>
+      ${item.score
+        ? `<div class="hymn-score"><a href="${esc(item.score)}" target="_blank" rel="noopener"><img src="${esc(item.score)}" alt="악보"></a>
+             <div class="hymn-score-tip">악보를 누르면 크게 볼 수 있습니다</div></div>`
+        : `<div class="hymn-score-empty">악보가 준비되지 않았습니다.</div>`}
       ${item.youtube ? `<a href="${esc(item.youtube)}" target="_blank" rel="noopener" class="youtube-link">▶ 유튜브로 듣기</a>` : ''}
     `;
-    openModal(item.title || '찬송', tabs);
-    modalBody.querySelectorAll('.hymn-tab').forEach(t => {
-      t.addEventListener('click', () => {
-        modalBody.querySelectorAll('.hymn-tab').forEach(x => x.classList.toggle('active', x === t));
-        const showLyrics = t.dataset.tab === 'lyrics';
-        modalBody.querySelector('.hymn-lyrics-wrap').style.display = showLyrics ? '' : 'none';
-        modalBody.querySelector('.hymn-score-wrap').style.display = showLyrics ? 'none' : '';
-      });
-    });
+    openModal(item.title || '찬송', html);
   }
 
   function renderScripture(item) {
@@ -1155,7 +1143,6 @@
       ? songs.map(s => `
           <div style="margin-bottom:24px">
             ${s.title ? `<div class="hymn-title" style="text-align:left;font-size:1.25rem;margin-bottom:10px">${esc(s.title)}</div>` : ''}
-            ${s.lyrics ? `<div class="hymn-lyrics">${esc(s.lyrics)}</div>` : ''}
             ${s.youtube ? `<a href="${esc(s.youtube)}" target="_blank" rel="noopener" class="youtube-link">▶ 유튜브로 듣기</a>` : ''}
           </div>
         `).join('<hr style="border:none;border-top:1px solid var(--line);margin:8px 0 20px">')
@@ -1312,6 +1299,7 @@
   `;
   document.head.appendChild(s);
 </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
