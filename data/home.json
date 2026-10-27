@@ -1,0 +1,74 @@
+{
+  "church": {
+    "name": "인평교회",
+    "photo": "",
+    "mottoLabel": "2026년 표어",
+    "motto": "할 말 있게 하시는 하나님",
+    "mottoVerse": ""
+  },
+  "word": {
+    "label": "이번 주 말씀",
+    "auto": true,
+    "title": "",
+    "reference": "",
+    "preacher": "",
+    "serviceType": "",
+    "button": "주보 보기"
+  },
+  "tiles": {
+    "intro": { "title": "교회소개", "sub": "교회와 섬기는 분들", "show": true },
+    "schedule": { "title": "교회일정", "sub": "이번 달 일정 보기", "show": true },
+    "photos": { "title": "교회사진", "sub": "사진첩 보기", "show": true },
+    "news": { "title": "교회소식", "sub": "소식 · 칼럼", "show": true }
+  },
+  "nav": {
+    "church": "교회",
+    "bulletin": "주보",
+    "share": "나눔",
+    "more": "더보기"
+  },
+  "intro": {
+    "text": "인평교회는 기독교대한성결교회에 속한 교회입니다.\n하나님의 나라와 하나님의 마음, 하나님의 은혜를 붙들고 함께 예배하며 서로 사랑하는 공동체입니다.",
+    "staff": [
+      { "role": "담임목사", "name": "채수호" }
+    ],
+    "worship": [
+      { "name": "주일오전예배", "time": "주일 오전 11시" },
+      { "name": "수요기도회", "time": "수요일 밤 7시 30분" },
+      { "name": "새벽기도회", "time": "주일-금 새벽 5시 30분" },
+      { "name": "금요심야기도회", "time": "금요일 밤 9시" }
+    ],
+    "address": "경상북도 칠곡군 북삼읍 인강8길 34",
+    "phone": "054-975-0191"
+  },
+  "schedule": {
+    "title": "10월 일정",
+    "items": [
+      { "date": "10월 29일 (목)", "text": "북삼오태 야유회" },
+      { "date": "11월 1일 (주일)", "text": "다니엘 기도회 시작 (저녁)" }
+    ]
+  },
+  "photos": [],
+  "columns": [],
+  "share": {
+    "title": "나눔",
+    "intro": "기도제목과 감사를 함께 나눕니다.",
+    "items": [
+      { "date": "10월", "title": "30일의 감사, 30일의 은혜", "text": "감사 노트 작성 챌린지가 진행 중입니다. 매일 한 가지씩 감사를 기록해 보세요." }
+    ]
+  },
+  "more": {
+    "links": [
+      { "title": "이전 주보", "url": "archive.html" },
+      { "title": "인쇄용 주보", "url": "print.html" },
+      { "title": "QR 코드", "url": "qr.html" },
+      { "title": "주보 편집", "url": "edit.html" },
+      { "title": "첫 화면 설정", "url": "settings.html" }
+    ],
+    "showAccount": true
+  },
+  "meta": {
+    "updatedAt": "2026-10-27",
+    "savedAt": "2026-10-27T00:00:00"
+  }
+}
